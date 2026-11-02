@@ -12,14 +12,14 @@
   <meta name="theme-color" content="#4f46e5" />
 
   <!-- Tailwind CSS -->
-  <script src="https://tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <!-- React и ReactDOM -->
-  <script src="https://unpkg.com"></script>
-  <script src="https://unpkg.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <!-- Babel -->
-  <script src="https://unpkg.com"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <!-- Supabase JS Client -->
-  <script src="https://jsdelivr.net"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * {
@@ -44,188 +44,1202 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased font-sans no-scrollbar">
+<body class="bg-slate-100 text-slate-800 antialiased font-sans">
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useMemo } = React;
 
-    // Инициализация Supabase
-    const SUPABASE_URL = "https://supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qZGRlb3preHh4anpwZnByY3BjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzMyNzEsImV4cCI6MjEwODg0OTI3MX0.WDsDxRQLzI1s_ZNaf5FNyYkvBxBwNvCzfLo8mCwJkrI";
+   const SUPABASE_URL = "https://radangmwyldbolbuoahx.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhZGFuZ213eWxkYm9sYnVvYWh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1OTI3MTIsImV4cCI6MjEwOTE2ODcxMn0.qaSZOIopwidX-l1BoJo4xieISo0VQHStCeOyKvlcMQU";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function App() {
-      const [activeTab, setActiveTab] = useState('events'); // events, shopping, tasks
-      const [currentUser, setCurrentUser] = useState('Общее'); // Рома, Марина, Общее
+    const WEB_RECIPES_DATABASE = [
+      {
+        id: 'gen_1',
+        title: "Классический бефстроганов с пюре",
+        category: "Ужин",
+        time: "40 мин",
+        ingredients: ["Говядина 500г", "Лук репчатый 2 шт", "Сметана 20% 150г", "Томатная паста 1 ст.л.", "Сливочное масло 30г"],
+        steps: "1. Нарезать мясо поперек волокон тонкими брусочками.\n2. Быстро обжарить на сильном огне до румяности.\n3. Отдельно спассеровать лук, добавить сметану и томатную пасту.\n4. Соединить с мясом и тушить на медленном огне 15 минут.",
+        source: "Поварёнок.ру",
+        photo: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop"
+      },
+      {
+        id: 'gen_2',
+        title: "Пышные сырники с изюмом",
+        category: "Завтрак",
+        time: "25 мин",
+        ingredients: ["Творог 9% 400г", "Яйцо 1 шт", "Сахар 2 ст.л.", "Мука 3 ст.л.", "Изюм 50г"],
+        steps: "1. Творог перетереть с яйцом и сахаром.\n2. Вмешать изюм и муку.\n3. Сформировать шайбочки, обвалять в муке.\n4. Жарить на среднем огне по 4 мин с каждой стороны под крышкой.",
+        source: "RussianFood.com",
+        photo: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?w=600&auto=format&fit=crop"
+      },
+      {
+        id: 'gen_3',
+        title: "Греческий салат с фетой и орегано",
+        category: "Обед",
+        time: "15 мин",
+        ingredients: ["Помидоры 3 шт", "Огурцы 2 шт", "Перец болгарский 1 шт", "Сыр Фета 150г", "Маслины без косточек 80г", "Оливковое масло"],
+        steps: "1. Крупно нарезать огурцы, перец и помидоры.\n2. Добавить маслины и нарезанный кубиками сыр Фета.\n3. Заправить оливковым маслом, посыпать сухим орегано.",
+        source: "Еда.ру",
+        photo: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop"
+      },
+      {
+        id: 'gen_4',
+        title: "Куриное филе в сливочно-чесночном соусе",
+        category: "Ужин",
+        time: "30 мин",
+        ingredients: ["Куриное филе 500г", "Сливки 20% 200мл", "Чеснок 3 зубчика", "Шпинат свежий 50г", "Пармезан 40г"],
+        steps: "1. Обжарить кусочки филе до золотистой корочки.\n2. Добавить измельченный чеснок и прогреть полминуты.\n3. Влить сливки, добавить шпинат и тертый сыр.\n4. Потомить 7-10 минут до загустения соуса.",
+        source: "RussianFood.com",
+        photo: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&auto=format&fit=crop"
+      }
+    ];
 
-      // Состояния данных
-      const [events, setEvents] = useState([]);
-      const [shoppingList, setShoppingList] = useState([]);
+    function formatDateToDDMMYY(isoDateStr) {
+      if (!isoDateStr) return '';
+      const parts = isoDateStr.split('-');
+      if (parts.length !== 3) return isoDateStr;
+      return `${parts[2]}.${parts[1]}.${parts[0].slice(-2)}`;
+    }
+
+    function FamilyPlanner() {
+      const [activeTab, setActiveTab] = useState('calendar');
+      const [currentUser, setCurrentUser] = useState(() => localStorage.getItem('fp_user') || 'Рома');
+      const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
+      
+      const [calendarViewDate, setCalendarViewDate] = useState(() => new Date());
+
       const [tasks, setTasks] = useState([]);
+      const [backlogTasks, setBacklogTasks] = useState([]);
+      const [scheduleEvents, setScheduleEvents] = useState([]);
+      const [customRecipes, setCustomRecipes] = useState([]);
+      const [shoppingList, setShoppingList] = useState([]);
+      const [loading, setLoading] = useState(true);
 
-      // Состояния форм ввода
-      const [newEvent, setNewEvent] = useState({ title: '', date: new Date().toISOString().split('T')[0], category: 'Общее' });
+      const [randomRecipeIndex, setRandomRecipeIndex] = useState(0);
+
+      const [filterAssignee, setFilterAssignee] = useState('Все');
+      
+      // Поля добавления задания в месячный план (с временем)
+      const [newTaskText, setNewTaskText] = useState('');
+      const [newTaskTime, setNewTaskTime] = useState('');
+      const [newTaskAssignee, setNewTaskAssignee] = useState('Общее');
+
+      // Бэклог
+      const [newBacklogText, setNewBacklogText] = useState('');
+      const [newBacklogAssignee, setNewBacklogAssignee] = useState('Общее');
+
+      // Недельный канбан
+      const [kanbanTime, setKanbanTime] = useState('10:00');
+      const [kanbanTitle, setKanbanTitle] = useState('');
+      const [kanbanCategory, setKanbanCategory] = useState('Спортзал');
+      const [kanbanAssignee, setKanbanAssignee] = useState('Общее');
+
+      // Покупки
       const [newShopItem, setNewShopItem] = useState('');
-      const [newTask, setNewTask] = useState('');
 
-      // Первичная загрузка данных
+      // Модалка рецепта
+      const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
+      const [recipeForm, setRecipeForm] = useState({
+        title: '',
+        category: 'Ужин',
+        time: '',
+        ingredientsText: '',
+        steps: '',
+        photo: ''
+      });
+
+      const toggleUserRole = () => {
+        const nextUser = currentUser === 'Рома' ? 'Марина' : 'Рома';
+        setCurrentUser(nextUser);
+        localStorage.setItem('fp_user', nextUser);
+      };
+
+      const nextRandomRecipe = () => {
+        setRandomRecipeIndex((prev) => (prev + 1) % WEB_RECIPES_DATABASE.length);
+      };
+
+      const currentRandomRecipe = WEB_RECIPES_DATABASE[randomRecipeIndex];
+
       const fetchData = async () => {
-        const { data: eventsData } = await supabase.from('events').select('*').order('date', { ascending: true });
-        if (eventsData) setEvents(eventsData);
+        try {
+          const [tRes, bRes, sRes, rRes, shRes] = await Promise.all([
+            supabase.from('tasks').select('*').order('created_at', { ascending: false }),
+            supabase.from('backlog').select('*').order('created_at', { ascending: false }),
+            supabase.from('schedule').select('*').order('time', { ascending: true }),
+            supabase.from('recipes').select('*').order('id', { ascending: false }),
+            supabase.from('shopping').select('*').order('created_at', { ascending: false })
+          ]);
 
-        const { data: shopData } = await supabase.from('shopping').select('*').order('created_at', { ascending: false });
-        if (shopData) setShoppingList(shopData);
-
-        const { data: tasksData } = await supabase.from('tasks').select('*').order('created_at', { ascending: false });
-        if (tasksData) setTasks(tasksData);
+          if (tRes.data) setTasks(tRes.data);
+          if (bRes.data) setBacklogTasks(bRes.data);
+          if (sRes.data) setScheduleEvents(sRes.data);
+          if (rRes.data) setCustomRecipes(rRes.data);
+          if (shRes.data) setShoppingList(shRes.data);
+        } catch (err) {
+          console.error("Ошибка загрузки:", err);
+        } finally {
+          setLoading(false);
+        }
       };
 
       useEffect(() => {
         fetchData();
 
-        // Настройка Realtime подписок для мгновенного обновления интерфейса
         const channel = supabase
-          .channel('schema-db-changes')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, () => { fetchData(); })
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'shopping' }, () => { fetchData(); })
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => { fetchData(); })
+          .channel('schema-db-all-sync')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
+            supabase.from('tasks').select('*').then(res => res.data && setTasks(res.data));
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'backlog' }, () => {
+            supabase.from('backlog').select('*').then(res => res.data && setBacklogTasks(res.data));
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'schedule' }, () => {
+            supabase.from('schedule').select('*').order('time', { ascending: true }).then(res => res.data && setScheduleEvents(res.data));
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'recipes' }, () => {
+            supabase.from('recipes').select('*').order('id', { ascending: false }).then(res => res.data && setCustomRecipes(res.data));
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'shopping' }, () => {
+            supabase.from('shopping').select('*').then(res => res.data && setShoppingList(res.data));
+          })
           .subscribe();
 
-        // Отписываемся при уничтожении компонента
-        return () => {
-          supabase.removeChannel(channel);
-        };
+        return () => supabase.removeChannel(channel);
       }, []);
 
-      // Логика работы с событиями
-      const handleAddEvent = async (e) => {
-        e.preventDefault();
-        if (!newEvent.title.trim()) return;
-        const { error } = await supabase.from('events').insert([newEvent]);
-        if (!error) {
-          setNewEvent({ title: '', date: new Date().toISOString().split('T')[0], category: currentUser });
+      const calendarDays = useMemo(() => {
+        const year = calendarViewDate.getFullYear();
+        const month = calendarViewDate.getMonth();
+        const firstDayOfMonth = new Date(year, month, 1);
+        const lastDayOfMonth = new Date(year, month + 1, 0);
+
+        let startingDay = firstDayOfMonth.getDay() - 1;
+        if (startingDay === -1) startingDay = 6;
+
+        const days = [];
+        for (let i = 0; i < startingDay; i++) {
+          days.push(null);
         }
-      };
-
-      const handleDeleteEvent = async (id) => {
-        await supabase.from('events').delete().eq('id', id);
-      };
-
-      // Логика работы с покупками
-      const handleAddShopItem = async (e) => {
-        e.preventDefault();
-        if (!newShopItem.trim()) return;
-        const { error } = await supabase.from('shopping').insert([{ name: newShopItem, bought: false, user: currentUser }]);
-        if (!error) {
-          setNewShopItem('');
+        for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
+          const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          days.push({ dayNumber: d, isoDate: iso });
         }
+        return days;
+      }, [calendarViewDate]);
+
+      const changeMonth = (offset) => {
+        setCalendarViewDate(new Date(calendarViewDate.getFullYear(), calendarViewDate.getMonth() + offset, 1));
       };
 
-      const toggleShopItem = async (item) => {
-        await supabase.from('shopping').update({ bought: !item.bought }).eq('id', item.id);
-      };
+      const monthName = calendarViewDate.toLocaleString('ru-RU', { month: 'long', year: 'numeric' });
 
-      const clearBoughtItems = async () => {
-        await supabase.from('shopping').delete().eq('bought', true);
-      };
+      const currentWeekDays = useMemo(() => {
+        const curr = new Date(selectedDate);
+        const day = curr.getDay();
+        const diff = curr.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(curr.setDate(diff));
 
-      // Логика работы с задачами
-      const handleAddTask = async (e) => {
-        e.preventDefault();
-        if (!newTask.trim()) return;
-        const { error } = await supabase.from('tasks').insert([{ title: newTask, completed: false, assignee: currentUser }]);
-        if (!error) {
-          setNewTask('');
+        const week = [];
+        const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+        for (let i = 0; i < 7; i++) {
+          const nextDay = new Date(monday);
+          nextDay.setDate(monday.getDate() + i);
+          const iso = nextDay.toISOString().split('T')[0];
+          week.push({
+            name: dayNames[i],
+            dateStr: formatDateToDDMMYY(iso),
+            isoDate: iso,
+            dayNum: nextDay.getDate()
+          });
         }
-      };
+        return week;
+      }, [selectedDate]);
 
+      // Задачи
       const toggleTask = async (task) => {
-        await supabase.from('tasks').update({ completed: !task.completed }).eq('id', task.id);
+        const nextDone = !task.done;
+        setTasks(tasks.map(t => t.id === task.id ? { ...t, done: nextDone } : t));
+        await supabase.from('tasks').update({ done: nextDone }).eq('id', task.id);
       };
 
-      const handleDeleteTask = async (id) => {
+      const addTask = async (e) => {
+        e.preventDefault();
+        if (!newTaskText.trim()) return;
+        const newTask = {
+          id: Date.now().toString(),
+          text: newTaskText.trim(),
+          time: newTaskTime || null,
+          date: selectedDate,
+          assignee: newTaskAssignee,
+          done: false
+        };
+        setTasks([newTask, ...tasks]);
+        setNewTaskText('');
+        setNewTaskTime('');
+        await supabase.from('tasks').insert([newTask]);
+      };
+
+      const deleteTask = async (id) => {
+        setTasks(tasks.filter(t => t.id !== id));
         await supabase.from('tasks').delete().eq('id', id);
       };
 
-      return (
-        <div class="flex flex-col h-screen max-w-md mx-auto bg-slate-50 shadow-2xl relative overflow-hidden">
-          
-          {/* Шапка приложения */}
-          <header class="bg-indigo-600 text-white px-4 pt-safe pb-4 shadow-md flex justify-between items-center shrink-0">
-            <div>
-              <h1 class="text-xl font-bold tracking-tight">Наш Планер</h1>
-              <p class="text-xs text-indigo-200">Рома & Марина</p>
-            </div>
-            <select 
-              value={currentUser} 
-              onChange={(e) => setCurrentUser(e.target.value)}
-              class="bg-indigo-700 text-white text-sm rounded-lg px-3 py-1.5 font-medium border border-indigo-500 focus:outline-none"
-            >
-              <option value="Общее">🏡 Общее</option>
-              <option value="Рома">👨 Рома</option>
-              <option value="Марина">👩 Марина</option>
-            </select>
-          </header>
+      // Канбан расписание (с отметкой выполнения done)
+      const toggleScheduleEvent = async (ev) => {
+        const nextDone = !ev.done;
+        setScheduleEvents(scheduleEvents.map(s => s.id === ev.id ? { ...s, done: nextDone } : s));
+        await supabase.from('schedule').update({ done: nextDone }).eq('id', ev.id);
+      };
 
-          {/* Контент */}
-          <main class="flex-1 overflow-y-auto px-4 py-4 pb-24 no-scrollbar">
-            
-            {/* ВКЛАДКА: СОБЫТИЯ */}
-            {activeTab === 'events' && (
-              <div class="space-y-4">
-                <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">📅 Семейный календарь</h2>
-                
-                <form onSubmit={handleAddEvent} class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3">
-                  <input 
-                    type="text" 
-                    placeholder="Название события..." 
-                    value={newEvent.title}
-                    onChange={(e) => setNewEvent({...newEvent, title: e.target.value, category: currentUser})}
-                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500"
-                  />
-                  <div class="flex gap-2">
-                    <input 
-                      type="date" 
-                      value={newEvent.date}
-                      onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
-                      class="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500"
-                    />
-                    <button type="submit" class="bg-indigo-600 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 active:scale-95 transition-transform">
-                      Добавить
+      const addScheduleEvent = async (e) => {
+        e.preventDefault();
+        if (!kanbanTitle.trim()) return;
+        const newEv = {
+          id: Date.now().toString(),
+          title: kanbanTitle.trim(),
+          time: kanbanTime,
+          date: selectedDate,
+          category: kanbanCategory,
+          assignee: kanbanAssignee,
+          done: false
+        };
+        setScheduleEvents([...scheduleEvents, newEv]);
+        setKanbanTitle('');
+        await supabase.from('schedule').insert([newEv]);
+      };
+
+      const deleteScheduleEvent = async (id) => {
+        setScheduleEvents(scheduleEvents.filter(s => s.id !== id));
+        await supabase.from('schedule').delete().eq('id', id);
+      };
+
+      // Бэклог
+      const toggleBacklog = async (task) => {
+        const nextDone = !task.done;
+        setBacklogTasks(backlogTasks.map(t => t.id === task.id ? { ...t, done: nextDone } : t));
+        await supabase.from('backlog').update({ done: nextDone }).eq('id', task.id);
+      };
+
+      const addBacklogTask = async (e) => {
+        e.preventDefault();
+        if (!newBacklogText.trim()) return;
+        const newTask = {
+          id: Date.now().toString(),
+          text: newBacklogText.trim(),
+          assignee: newBacklogAssignee,
+          done: false
+        };
+        setBacklogTasks([newTask, ...backlogTasks]);
+        setNewBacklogText('');
+        await supabase.from('backlog').insert([newTask]);
+      };
+
+      const deleteBacklogTask = async (id) => {
+        setBacklogTasks(backlogTasks.filter(t => t.id !== id));
+        await supabase.from('backlog').delete().eq('id', id);
+      };
+
+      // Рецепты
+      const handleAddCustomRecipe = async (e) => {
+        e.preventDefault();
+        if (!recipeForm.title.trim()) return;
+
+        const ingredientsArr = recipeForm.ingredientsText
+          .split('\n')
+          .map(i => i.trim())
+          .filter(Boolean);
+
+        const newRecipe = {
+          id: Date.now().toString(),
+          title: recipeForm.title.trim(),
+          category: recipeForm.category || 'Ужин',
+          time: recipeForm.time || '30 мин',
+          ingredients: ingredientsArr.length ? ingredientsArr : ['Ингредиенты на глаз'],
+          steps: recipeForm.steps || 'Готовить с любовью!',
+          photo: recipeForm.photo.trim() || null
+        };
+
+        setCustomRecipes([newRecipe, ...customRecipes]);
+        setIsRecipeModalOpen(false);
+        setRecipeForm({ title: '', category: 'Ужин', time: '', ingredientsText: '', steps: '', photo: '' });
+        await supabase.from('recipes').insert([newRecipe]);
+      };
+
+      const deleteCustomRecipe = async (id) => {
+        setCustomRecipes(customRecipes.filter(r => r.id !== id));
+        await supabase.from('recipes').delete().eq('id', id);
+      };
+
+      const addIngredientsToCart = async (ingredients) => {
+        const newItems = ingredients.map(ing => ({
+          id: Math.random().toString(),
+          text: ing,
+          done: false
+        }));
+        setShoppingList([...newItems, ...shoppingList]);
+        alert('Ингредиенты добавлены в список покупок!');
+        await supabase.from('shopping').insert(newItems);
+      };
+
+      // Покупки
+      const toggleShopItem = async (item) => {
+        const nextDone = !item.done;
+        setShoppingList(shoppingList.map(s => s.id === item.id ? { ...s, done: nextDone } : s));
+        await supabase.from('shopping').update({ done: nextDone }).eq('id', item.id);
+      };
+
+      const addShopItem = async (e) => {
+        e.preventDefault();
+        if (!newShopItem.trim()) return;
+        const newItem = { id: Date.now().toString(), text: newShopItem.trim(), done: false };
+        setShoppingList([newItem, ...shoppingList]);
+        setNewShopItem('');
+        await supabase.from('shopping').insert([newItem]);
+      };
+
+      const deleteShopItem = async (id, e) => {
+        e.stopPropagation();
+        setShoppingList(shoppingList.filter(s => s.id !== id));
+        await supabase.from('shopping').delete().eq('id', id);
+      };
+
+      // Фильтры
+      const currentTasks = useMemo(() => {
+        return tasks
+          .filter(t => {
+            const matchesDate = t.date === selectedDate;
+            const matchesAssignee = filterAssignee === 'Все' || t.assignee === filterAssignee;
+            return matchesDate && matchesAssignee;
+          })
+          .sort((a, b) => {
+            if (a.time && b.time) return a.time.localeCompare(b.time);
+            if (a.time) return -1;
+            if (b.time) return 1;
+            return 0;
+          });
+      }, [tasks, selectedDate, filterAssignee]);
+
+      const currentSchedule = useMemo(() => {
+        return scheduleEvents.filter(s => {
+          const matchesDate = s.date === selectedDate;
+          const matchesAssignee = filterAssignee === 'Все' || s.assignee === filterAssignee;
+          return matchesDate && matchesAssignee;
+        });
+      }, [scheduleEvents, selectedDate, filterAssignee]);
+
+      const currentBacklog = useMemo(() => {
+        return backlogTasks.filter(t => filterAssignee === 'Все' || t.assignee === filterAssignee);
+      }, [backlogTasks, filterAssignee]);
+
+      return (
+        <div class="max-w-md mx-auto min-h-screen bg-slate-50 flex flex-col justify-between pb-28">
+          <div>
+            <header class="bg-indigo-600 text-white pt-safe px-4 pb-3 sticky top-0 z-30 shadow-md">
+              <div class="flex items-center justify-between gap-2 pt-2">
+                <div class="min-w-0">
+                  <h1 class="text-base font-bold tracking-tight">Рома & Марина 🤍</h1>
+                  <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="text-[11px] text-indigo-200">Вы:</span>
+                    <button 
+                      onClick={toggleUserRole}
+                      class="text-[11px] font-bold bg-indigo-500/80 hover:bg-indigo-500 px-2 py-0.5 rounded-full border border-indigo-400/40 active:scale-95 transition"
+                    >
+                      {currentUser} ⇄
                     </button>
+                  </div>
+                </div>
+
+                <div class="shrink-0 flex items-center bg-indigo-700/90 px-3 py-1.5 rounded-xl border border-indigo-500/50 shadow-inner">
+                  <span class="text-xs font-mono font-bold tracking-wider text-indigo-100">
+                    {formatDateToDDMMYY(selectedDate)}
+                  </span>
+                </div>
+              </div>
+            </header>
+
+            {/* ВКЛАДКА 1: МЕСЯЧНЫЙ КАЛЕНДАРЬ */}
+            {activeTab === 'calendar' && (
+              <main class="p-4 space-y-3.5">
+                <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-100">
+                  <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider capitalize">
+                      {monthName}
+                    </h2>
+                    <div class="flex gap-1.5">
+                      <button onClick={() => changeMonth(-1)} class="w-7 h-7 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center justify-center font-bold text-xs">
+                        ‹
+                      </button>
+                      <button onClick={() => { setCalendarViewDate(new Date()); setSelectedDate(new Date().toISOString().split('T')[0]); }} class="px-2 h-7 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-semibold">
+                        Сегодня
+                      </button>
+                      <button onClick={() => changeMonth(1)} class="w-7 h-7 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center justify-center font-bold text-xs">
+                        ›
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 mb-1">
+                    <span>ПН</span><span>ВТ</span><span>СР</span><span>ЧТ</span><span>ПТ</span><span>СБ</span><span>ВС</span>
+                  </div>
+
+                  <div class="grid grid-cols-7 gap-1">
+                    {calendarDays.map((item, idx) => {
+                      if (!item) return <div key={idx} class="h-9"></div>;
+
+                      const isSelected = item.isoDate === selectedDate;
+                      const isToday = item.isoDate === new Date().toISOString().split('T')[0];
+                      
+                      const dayTasks = tasks.filter(t => t.date === item.isoDate);
+                      const dayEvents = scheduleEvents.filter(s => s.date === item.isoDate);
+                      const hasUndone = dayTasks.some(t => !t.done) || dayEvents.some(s => !s.done);
+                      const hasDone = dayTasks.some(t => t.done) || dayEvents.some(s => s.done);
+
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => setSelectedDate(item.isoDate)}
+                          class={`h-9 rounded-xl flex flex-col items-center justify-center relative transition ${
+                            isSelected 
+                              ? 'bg-indigo-600 text-white font-bold shadow-sm' 
+                              : isToday 
+                              ? 'bg-indigo-50 text-indigo-600 font-bold border border-indigo-200' 
+                              : 'text-slate-700 hover:bg-slate-100'
+                          }`}
+                        >
+                          <span class="text-xs leading-none">{item.dayNumber}</span>
+                          {(dayTasks.length > 0 || dayEvents.length > 0) && (
+                            <div class="flex gap-0.5 mt-1">
+                              {hasUndone && <span class={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-rose-500'}`}></span>}
+                              {hasDone && <span class={`w-1 h-1 rounded-full ${isSelected ? 'bg-indigo-200' : 'bg-emerald-500'}`}></span>}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-1 bg-slate-200/80 p-1 rounded-xl text-xs font-semibold">
+                  {['Все', 'Рома', 'Марина', 'Общее'].map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setFilterAssignee(tab)}
+                      class={`py-1.5 rounded-lg transition-all text-center ${
+                        filterAssignee === tab ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Добавление задачи в месячный план с выбором времени */}
+                <form onSubmit={addTask} class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 space-y-2">
+                  <div class="flex gap-2">
+                    <input
+                      type="time"
+                      value={newTaskTime}
+                      onChange={(e) => setNewTaskTime(e.target.value)}
+                      class="bg-slate-100 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 outline-none"
+                      title="Время задания (по желанию)"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Дело на день..."
+                      value={newTaskText}
+                      onChange={(e) => setNewTaskText(e.target.value)}
+                      class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none focus:border-indigo-500"
+                    />
+                  </div>
+                  <div class="flex gap-2 justify-between items-center">
+                    <span class="text-[11px] text-slate-400 pl-1">
+                      {newTaskTime ? `Время: ${newTaskTime}` : 'Без точного времени'}
+                    </span>
+                    <div class="flex gap-2">
+                      <select
+                        value={newTaskAssignee}
+                        onChange={(e) => setNewTaskAssignee(e.target.value)}
+                        class="bg-slate-50 border border-slate-200 text-xs font-medium rounded-xl px-2.5 py-1.5 text-slate-700 outline-none"
+                      >
+                        <option value="Общее">Оба</option>
+                        <option value="Рома">Рома</option>
+                        <option value="Марина">Марина</option>
+                      </select>
+                      <button type="submit" class="bg-indigo-600 text-white px-4 py-1.5 rounded-xl text-xs font-bold active:scale-95 transition">
+                        + Добавить
+                      </button>
+                    </div>
                   </div>
                 </form>
 
-                <div class="space-y-2">
-                  {events.length === 0 ? (
-                    <p class="text-center text-sm text-slate-400 py-8">Пока нет запланированных событий</p>
-                  ) : (
-                    events.map(ev => (
-                      <div key={ev.id} class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
-                        <div class="flex flex-col gap-1">
-                          <span class="text-sm font-semibold text-slate-800">{ev.title}</span>
-                          <div class="flex items-center gap-2 text-xs text-slate-500">
-                            <span class="bg-slate-100 px-2 py-0.5 rounded-full font-medium text-slate-600">{ev.date}</span>
-                            <span class={`px-2 py-0.5 rounded-full font-medium ${
-                              ev.category === 'Рома' ? 'bg-blue-50 text-blue-600' : 
-                              ev.category === 'Марина' ? 'bg-pink-50 text-pink-600' : 'bg-purple-50 text-purple-600'
-                            }`}>{ev.category === 'Общее' ? '🏡 Все' : ev.category}</span>
+                {/* Расписание из канбана */}
+                {currentSchedule.length > 0 && (
+                  <div class="space-y-2">
+                    <h3 class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider px-1">
+                      🕒 Недельный таймлайн ({currentSchedule.length})
+                    </h3>
+                    <div class="space-y-1.5">
+                      {currentSchedule.map(ev => (
+                        <div key={ev.id} class={`flex items-center justify-between p-2.5 bg-indigo-50/70 border border-indigo-100 rounded-2xl transition ${
+                          ev.done ? 'opacity-50 line-through bg-slate-100' : ''
+                        }`}>
+                          <div class="flex items-center gap-2 min-w-0">
+                            <button
+                              onClick={() => toggleScheduleEvent(ev)}
+                              class={`w-5 h-5 rounded-md border flex items-center justify-center font-bold text-[10px] shrink-0 ${
+                                ev.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-indigo-300 bg-white'
+                              }`}
+                            >
+                              {ev.done && '✓'}
+                            </button>
+                            <span class="text-xs font-mono font-bold text-indigo-700 bg-white px-1.5 py-0.5 rounded-md shadow-xs shrink-0">
+                              {ev.time}
+                            </span>
+                            <span class={`text-xs font-semibold truncate ${ev.done ? 'text-slate-400' : 'text-slate-800'}`}>
+                              {ev.title}
+                            </span>
+                          </div>
+                          <div class="flex items-center gap-1.5 shrink-0">
+                            <span class="text-[9px] text-indigo-600 font-medium">{ev.category}</span>
+                            <span class={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                              ev.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
+                              ev.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-200 text-slate-700'
+                            }`}>
+                              {ev.assignee}
+                            </span>
+                            <button onClick={() => deleteScheduleEvent(ev.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1">✕</button>
                           </div>
                         </div>
-                        <button onClick={() => handleDeleteEvent(ev.id)} class="text-slate-300 hover:text-red-500 p-1">
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Задачи на день */}
+                <div class="space-y-2">
+                  <div class="flex justify-between items-center px-1">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      Задачи ({currentTasks.length})
+                    </h2>
+                  </div>
+
+                  {currentTasks.length === 0 && currentSchedule.length === 0 ? (
+                    <div class="text-center py-6 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">
+                      Нет запланированных дел на {formatDateToDDMMYY(selectedDate)} ☕
+                    </div>
+                  ) : (
+                    currentTasks.map((task) => (
+                      <div
+                        key={task.id}
+                        class={`flex items-center gap-2.5 p-3 bg-white rounded-2xl shadow-sm border border-slate-100 transition ${
+                          task.done ? 'opacity-50 bg-slate-50/80' : ''
+                        }`}
+                      >
+                        <button
+                          onClick={() => toggleTask(task)}
+                          class={`w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all shrink-0 ${
+                            task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'
+                          }`}
+                        >
+                          {task.done && '✓'}
+                        </button>
+
+                        <div class="flex-1 min-w-0 flex items-center gap-2">
+                          {task.time && (
+                            <span class="text-[11px] font-mono font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded-md shrink-0">
+                              {task.time}
+                            </span>
+                          )}
+                          <p class={`text-xs font-medium leading-tight truncate ${task.done ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                            {task.text}
+                          </p>
+                        </div>
+
+                        <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
+                          task.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
+                          task.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {task.assignee}
+                        </span>
+
+                        <button onClick={() => deleteTask(task.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1 shrink-0">
                           ✕
                         </button>
                       </div>
                     ))
                   )}
                 </div>
-              </div>
+              </main>
             )}
 
-            {/* ВКЛАДКА: СПИСОК ПОКУПОК */}
-            {activeTab === 'shopping' && (
-              <div class="space-y-4">
-                <div class="flex justify-between items-center">
+            {/* ВКЛАДКА 2: НЕДЕЛЬНЫЙ КАНБАН (С «ДРУГОЕ» И ЧЕКБОКСАМИ ВЫПОЛНЕНИЯ) */}
+            {activeTab === 'kanban' && (
+              <main class="p-4 space-y-4">
+                <div class="flex justify-between items-center px-1">
+                  <div>
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Недельный таймлайн</h2>
+                    <p class="text-[11px] text-slate-500">С отметкой выполнения</p>
+                  </div>
+                  <button 
+                    onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+                    class="text-xs text-indigo-600 font-semibold bg-indigo-50 px-2 py-1 rounded-lg"
+                  >
+                    Сегодня
+                  </button>
+                </div>
 
-                
+                <form onSubmit={addScheduleEvent} class="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 space-y-2">
+                  <div class="flex gap-2">
+                    <input
+                      type="time"
+                      value={kanbanTime}
+                      onChange={(e) => setKanbanTime(e.target.value)}
+                      class="bg-slate-100 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 outline-none"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Врач, тренировка, созвон..."
+                      value={kanbanTitle}
+                      onChange={(e) => setKanbanTitle(e.target.value)}
+                      class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none focus:border-indigo-500"
+                    />
+                  </div>
+                  <div class="flex gap-2">
+                    <select
+                      value={kanbanCategory}
+                      onChange={(e) => setKanbanCategory(e.target.value)}
+                      class="flex-1 bg-slate-50 border border-slate-200 text-xs rounded-xl px-2 py-1.5 text-slate-700 outline-none"
+                    >
+                      <option value="Спортзал">🏋️‍♂️ Спортзал</option>
+                      <option value="Врач">🩺 Врач</option>
+                      <option value="Встреча">🤝 Встреча</option>
+                      <option value="Учеба / Работа">💻 Работа</option>
+                      <option value="Отдых">🎉 Отдых</option>
+                      <option value="Другое">📌 Другое</option>
+                    </select>
+                    <select
+                      value={kanbanAssignee}
+                      onChange={(e) => setKanbanAssignee(e.target.value)}
+                      class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-2 py-1.5 text-slate-700 outline-none"
+                    >
+                      <option value="Общее">Оба</option>
+                      <option value="Рома">Рома</option>
+                      <option value="Марина">Марина</option>
+                    </select>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-1.5 rounded-xl text-xs font-bold active:scale-95">
+                      + В график
+                    </button>
+                  </div>
+                </form>
+
+                <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2 pt-1 -mx-4 px-4 snap-x">
+                  {currentWeekDays.map((col) => {
+                    const isSelected = col.isoDate === selectedDate;
+                    const dayEvents = scheduleEvents.filter(s => s.date === col.isoDate && (filterAssignee === 'Все' || s.assignee === filterAssignee));
+                    const dayTasks = tasks.filter(t => t.date === col.isoDate && (filterAssignee === 'Все' || t.assignee === filterAssignee));
+                    const totalItems = dayEvents.length + dayTasks.length;
+
+                    return (
+                      <div 
+                        key={col.isoDate} 
+                        onClick={() => setSelectedDate(col.isoDate)}
+                        class={`min-w-[220px] w-[220px] shrink-0 bg-white rounded-2xl p-3 shadow-sm border transition snap-start flex flex-col justify-between cursor-pointer ${
+                          isSelected ? 'border-indigo-500 ring-2 ring-indigo-100' : 'border-slate-100'
+                        }`}
+                      >
+                        <div>
+                          <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                            <div>
+                              <span class="text-xs font-bold text-slate-700">{col.name}</span>
+                              <span class="text-[10px] text-slate-400 ml-1.5 font-mono">{col.dateStr}</span>
+                            </div>
+                            <span class={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                              {totalItems}
+                            </span>
+                          </div>
+
+                          <div class="mt-2.5 space-y-2 min-h-[140px]">
+                            {/* События недели с чекбоксом выполнения */}
+                            {dayEvents.map(ev => (
+                              <div key={ev.id} class={`p-2 rounded-xl border transition ${
+                                ev.done ? 'bg-slate-100/80 border-slate-200 opacity-60' : 'bg-indigo-50/70 border-indigo-100'
+                              }`}>
+                                <div class="flex items-center justify-between">
+                                  <div class="flex items-center gap-1.5">
+                                    <button
+                                      onClick={(e) => { e.stopPropagation(); toggleScheduleEvent(ev); }}
+                                      class={`w-4 h-4 rounded border flex items-center justify-center font-bold text-[9px] ${
+                                        ev.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 bg-white'
+                                      }`}
+                                    >
+                                      {ev.done && '✓'}
+                                    </button>
+                                    <span class="text-[10px] font-mono font-bold text-indigo-700 bg-white px-1 rounded shadow-2xs">
+                                      {ev.time}
+                                    </span>
+                                  </div>
+                                  <span class={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                                    ev.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
+                                    ev.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-200 text-slate-700'
+                                  }`}>
+                                    {ev.assignee}
+                                  </span>
+                                </div>
+                                <p class={`text-xs font-semibold mt-1 leading-tight ${ev.done ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                                  {ev.title}
+                                </p>
+                                <div class="flex justify-between items-center mt-1">
+                                  <span class="text-[9px] text-indigo-500 font-medium">{ev.category}</span>
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); deleteScheduleEvent(ev.id); }}
+                                    class="text-slate-300 hover:text-rose-500 text-[10px]"
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+
+                            {/* Задачи дня */}
+                            {dayTasks.map(t => (
+                              <div key={t.id} class="bg-slate-50 p-2 rounded-xl border border-slate-100 flex items-center justify-between gap-1.5">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); toggleTask(t); }}
+                                    class={`w-4 h-4 rounded border flex items-center justify-center font-bold text-[9px] shrink-0 ${
+                                      t.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 bg-white'
+                                    }`}
+                                  >
+                                    {t.done && '✓'}
+                                  </button>
+                                  {t.time && (
+                                    <span class="text-[9px] font-mono font-bold text-indigo-600 bg-white px-1 rounded shrink-0">
+                                      {t.time}
+                                    </span>
+                                  )}
+                                  <span class={`text-xs leading-tight truncate ${t.done ? 'line-through text-slate-400' : 'text-slate-700'}`}>
+                                    {t.text}
+                                  </span>
+                                </div>
+                                <span class={`text-[8px] font-bold px-1 rounded shrink-0 ${
+                                  t.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
+                                  t.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-200 text-slate-600'
+                                }`}>
+                                  {t.assignee}
+                                </span>
+                              </div>
+                            ))}
+
+                            {totalItems === 0 && (
+                              <div class="h-full flex items-center justify-center text-[11px] text-slate-300 py-6">
+                                Свободно
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div class="text-[10px] text-center text-indigo-500 font-semibold mt-2 pt-1 border-t border-slate-50">
+                          {isSelected ? '✓ Выбранный день' : 'Тапнуть чтобы выбрать'}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </main>
+            )}
+
+            {/* ВКЛАДКА 3: БЭКЛОГ (БЕЗ ДАТЫ) */}
+            {activeTab === 'backlog' && (
+              <main class="p-4 space-y-3.5">
+                <div class="px-1">
+                  <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Дела когда-нибудь (без даты)</h2>
+                  <p class="text-[11px] text-slate-500">Планы, покупки на будущее, дела без четких сроков</p>
+                </div>
+
+                <div class="grid grid-cols-4 gap-1 bg-slate-200/80 p-1 rounded-xl text-xs font-semibold">
+                  {['Все', 'Рома', 'Марина', 'Общее'].map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setFilterAssignee(tab)}
+                      class={`py-1.5 rounded-lg transition-all text-center ${
+                        filterAssignee === tab ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                <form onSubmit={addBacklogTask} class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Например: Починить полку, сдать анализы..."
+                    value={newBacklogText}
+                    onChange={(e) => setNewBacklogText(e.target.value)}
+                    class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500"
+                  />
+                  <select
+                    value={newBacklogAssignee}
+                    onChange={(e) => setNewBacklogAssignee(e.target.value)}
+                    class="bg-slate-50 border border-slate-200 text-xs font-medium rounded-xl px-2 text-slate-700 outline-none"
+                  >
+                    <option value="Общее">Оба</option>
+                    <option value="Рома">Рома</option>
+                    <option value="Марина">Марина</option>
+                  </select>
+                  <button type="submit" class="bg-indigo-600 text-white px-3.5 py-2 rounded-xl text-sm font-bold active:scale-95 transition">
+                    +
+                  </button>
+                </form>
+
+                <div class="space-y-2">
+                  {currentBacklog.length === 0 ? (
+                    <div class="text-center py-8 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">
+                      Список свободных дел пуст ✨
+                    </div>
+                  ) : (
+                    currentBacklog.map((task) => (
+                      <div
+                        key={task.id}
+                        class={`flex items-center gap-2.5 p-3 bg-white rounded-2xl shadow-sm border border-slate-100 transition ${
+                          task.done ? 'opacity-50 bg-slate-50/80' : ''
+                        }`}
+                      >
+                        <button
+                          onClick={() => toggleBacklog(task)}
+                          class={`w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all ${
+                            task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'
+                          }`}
+                        >
+                          {task.done && '✓'}
+                        </button>
+
+                        <div class="flex-1 min-w-0">
+                          <p class={`text-xs font-medium leading-tight truncate ${task.done ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                            {task.text}
+                          </p>
+                        </div>
+
+                        <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                          task.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
+                          task.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {task.assignee}
+                        </span>
+
+                        <button onClick={() => deleteBacklogTask(task.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1">
+                          ✕
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </main>
+            )}
+
+            {/* ВКЛАДКА 4: РЕЦЕПТЫ */}
+            {activeTab === 'recipes' && (
+              <main class="p-4 space-y-4">
+                <div class="flex justify-between items-center px-1">
+                  <div>
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Кулинарная книга</h2>
+                    <p class="text-[11px] text-slate-500">Идеи и домашние рецепты</p>
+                  </div>
+                  <button
+                    onClick={() => setIsRecipeModalOpen(true)}
+                    class="bg-indigo-600 text-white text-[11px] font-bold py-1.5 px-3 rounded-xl active:scale-95 transition"
+                  >
+                    + Свой рецепт
+                  </button>
+                </div>
+
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/80 rounded-3xl p-4 shadow-sm space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold text-amber-900 flex items-center gap-1.5">
+                      <span>✨</span> Идея на сегодня:
+                    </span>
+                    <button
+                      onClick={nextRandomRecipe}
+                      class="bg-white/90 hover:bg-white text-amber-900 border border-amber-200 text-xs font-bold py-1 px-3 rounded-xl shadow-xs active:scale-95 transition flex items-center gap-1"
+                    >
+                      <span>🎲</span> Другой рецепт
+                    </button>
+                  </div>
+
+                  <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-amber-100">
+                    {currentRandomRecipe.photo && (
+                      <div class="w-full h-36 bg-slate-100 relative">
+                        <img src={currentRandomRecipe.photo} alt={currentRandomRecipe.title} class="w-full h-full object-cover" />
+                        <span class="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[9px] px-2 py-0.5 rounded-md font-medium">
+                          {currentRandomRecipe.source}
+                        </span>
+                      </div>
+                    )}
+
+                    <div class="p-3.5 space-y-2.5">
+                      <div class="flex justify-between items-start">
+                        <div>
+                          <span class="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">
+                            {currentRandomRecipe.category}
+                          </span>
+                          <h3 class="text-sm font-bold text-slate-800 mt-1">{currentRandomRecipe.title}</h3>
+                        </div>
+                        <span class="text-xs text-slate-400 font-medium">⏱️ {currentRandomRecipe.time}</span>
+                      </div>
+
+                      <div class="text-xs text-slate-600 space-y-0.5">
+                        <p class="font-bold text-slate-500 mb-0.5">Ингредиенты:</p>
+                        {currentRandomRecipe.ingredients.map((ing, i) => (
+                          <div key={i} class="text-slate-600 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+                            <span>{ing}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <p class="text-xs text-slate-500 whitespace-pre-line bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                        {currentRandomRecipe.steps}
+                      </p>
+
+                      <button
+                        onClick={() => addIngredientsToCart(currentRandomRecipe.ingredients)}
+                        class="w-full bg-amber-500 hover:bg-amber-600 active:scale-98 text-white text-xs font-bold py-2 rounded-xl transition shadow-xs"
+                      >
+                        🛒 Отправить ингредиенты в список покупок
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {isRecipeModalOpen && (
+                  <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-3xl p-5 w-full max-w-sm space-y-3 max-h-[90vh] overflow-y-auto">
+                      <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-slate-800">Добавить свой рецепт</h3>
+                        <button onClick={() => setIsRecipeModalOpen(false)} class="text-slate-400 text-base">✕</button>
+                      </div>
+
+                      <form onSubmit={handleAddCustomRecipe} class="space-y-2.5">
+                        <input
+                          type="text"
+                          placeholder="Название блюда (по желанию)"
+                          value={recipeForm.title}
+                          onChange={(e) => setRecipeForm({ ...recipeForm, title: e.target.value })}
+                          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500"
+                        />
+                        <div class="flex gap-2">
+                          <select
+                            value={recipeForm.category}
+                            onChange={(e) => setRecipeForm({ ...recipeForm, category: e.target.value })}
+                            class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-2.5 py-2 text-slate-700 outline-none flex-1"
+                          >
+                            <option value="Завтрак">Завтрак</option>
+                            <option value="Обед">Обед</option>
+                            <option value="Ужин">Ужин</option>
+                            <option value="Десерт">Десерт</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Время (напр. 30 мин)"
+                            value={recipeForm.time}
+                            onChange={(e) => setRecipeForm({ ...recipeForm, time: e.target.value })}
+                            class="w-32 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs outline-none"
+                          />
+                        </div>
+
+                        <textarea
+                          rows="3"
+                          placeholder="Ингредиенты (каждый с новой строчки, по желанию)..."
+                          value={recipeForm.ingredientsText}
+                          onChange={(e) => setRecipeForm({ ...recipeForm, ingredientsText: e.target.value })}
+                          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"
+                        ></textarea>
+
+                        <textarea
+                          rows="3"
+                          placeholder="Способ приготовления (по желанию)..."
+                          value={recipeForm.steps}
+                          onChange={(e) => setRecipeForm({ ...recipeForm, steps: e.target.value })}
+                          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"
+                        ></textarea>
+
+                        <input
+                          type="url"
+                          placeholder="Ссылка на фото (по желанию)"
+                          value={recipeForm.photo}
+                          onChange={(e) => setRecipeForm({ ...recipeForm, photo: e.target.value })}
+                          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"
+                        />
+
+                        <button type="submit" class="w-full bg-indigo-600 text-white text-xs font-bold py-2.5 rounded-xl shadow-md active:scale-98">
+                          Сохранить в планер
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                )}
+
+                {customRecipes.length > 0 && (
+                  <div class="space-y-3 pt-2">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
+                      Мои рецепты ({customRecipes.length})
+                    </h3>
+                    {customRecipes.map(recipe => (
+                      <div key={recipe.id} class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+                        {recipe.photo && (
+                          <div class="w-full h-32 bg-slate-100">
+                            <img src={recipe.photo} alt={recipe.title} class="w-full h-full object-cover" />
+                          </div>
+                        )}
+                        <div class="p-3.5 space-y-2">
+                          <div class="flex justify-between items-start">
+                            <div>
+                              <span class="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md">
+                                {recipe.category}
+                              </span>
+                              <h4 class="text-sm font-bold text-slate-800 mt-1">{recipe.title}</h4>
+                            </div>
+                            <button 
+                              onClick={() => deleteCustomRecipe(recipe.id)}
+                              class="text-slate-300 hover:text-rose-500 text-xs p-1"
+                            >
+                              ✕
+                            </button>
+                          </div>
+
+                          {recipe.ingredients && recipe.ingredients.length > 0 && (
+                            <div class="text-xs text-slate-600 space-y-0.5">
+                              {recipe.ingredients.map((ing, i) => (
+                                <div key={i} class="flex items-center gap-1.5">
+                                  <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"></span>
+                                  <span>{ing}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          <button
+                            onClick={() => addIngredientsToCart(recipe.ingredients || [])}
+                            class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold py-1.5 rounded-xl transition mt-2"
+                          >
+                            🛒 В список покупок
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </main>
+            )}
+
+            {/* ВКЛАДКА 5: ПОКУПКИ */}
+            {activeTab === 'cart' && (
+              <main class="p-4 space-y-3.5">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
+                  Список покупок ({shoppingList.filter(i => !i.done).length} осталось)
+                </h2>
+
+                <form onSubmit={addShopItem} class="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Что купить в магазине..."
+                    value={newShopItem}
+                    onChange={(e) => setNewShopItem(e.target.value)}
+                    class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500"
+                  />
+                  <button type="submit" class="bg-indigo-600 text-white px-3.5 py-2 rounded-xl text-sm font-bold active:scale-95 transition">
+                    +
+                  </button>
+                </form>
+
+                <div class="space-y-1.5">
+                  {shoppingList.map(item => (
+                    <div
+                      key={item.id}
+                      onClick={() => toggleShopItem(item)}
+                      class={`flex items-center justify-between p-3 bg-white rounded-xl shadow-sm border border-slate-100 cursor-pointer transition ${
+                        item.done ? 'opacity-40 line-through bg-slate-50' : ''
+                      }`}
+                    >
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <div class={`w-5 h-5 rounded-md border flex items-center justify-center text-xs font-bold ${
+                          item.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'
+                        }`}>
+                          {item.done && '✓'}
+                        </div>
+                        <span class="text-xs font-medium text-slate-700 truncate">{item.text}</span>
+                      </div>
+                      <button 
+                        onClick={(e) => deleteShopItem(item.id, e)} 
+                        class="text-slate-300 hover:text-rose-500 text-xs px-2 py-1"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </main>
+            )}
+          </div>
+
+          <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 pt-2 pb-safe flex justify-around items-center z-40">
+            <button
+              onClick={() => setActiveTab('calendar')}
+              class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
+                activeTab === 'calendar' ? 'text-indigo-600 font-bold' : 'text-slate-400'
+              }`}
+            >
+              <span class="text-base">📅</span>
+              Календарь
+            </button>
+            <button
+              onClick={() => setActiveTab('kanban')}
+              class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
+                activeTab === 'kanban' ? 'text-indigo-600 font-bold' : 'text-slate-400'
+              }`}
+            >
+              <span class="text-base">📊</span>
+              Неделя
+            </button>
+            <button
+              onClick={() => setActiveTab('backlog')}
+              class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
+                activeTab === 'backlog' ? 'text-indigo-600 font-bold' : 'text-slate-400'
+              }`}
+            >
+              <span class="text-base">📝</span>
+              Без даты
+            </button>
+            <button
+              onClick={() => setActiveTab('recipes')}
+              class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
+                activeTab === 'recipes' ? 'text-indigo-600 font-bold' : 'text-slate-400'
+              }`}
+            >
+              <span class="text-base">📖</span>
+              Рецепты
+            </button>
+            <button
+              onClick={() => setActiveTab('cart')}
+              class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
+                activeTab === 'cart' ? 'text-indigo-600 font-bold' : 'text-slate-400'
+              }`}
+            >
+              <span class="text-base">🛒</span>
+              Покупки
+            </button>
+          </nav>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<FamilyPlanner />);
+  </script>
+</body>
+</html>
+
+
+--
