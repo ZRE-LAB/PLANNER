@@ -10,8 +10,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Рома & Марина" />
 
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%233b82f6'/%3E%3Cstop offset='50%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23bg)'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='-apple-system, system-ui, BlinkMacSystemFont, sans-serif' font-weight='900' font-size='165' fill='%23ffffff' letter-spacing='-5'%3EР%3Ctspan fill='%23fbcfe8' font-size='120'%3E|%3C/tspan%3EМ%3C/text%3E%3C/svg%3E" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%233b82f6'/%3E%3Cstop offset='50%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23bg)'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='-apple-system, system-ui, BlinkMacSystemFont, sans-serif' font-weight='900' font-size='165' fill='%23ffffff' letter-spacing='-5'%3EР%3Ctspan fill='%23fbcfe8' font-size='120'%3E|%3C/tspan%3EМ%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icon.png" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -32,10 +32,10 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect, useMemo } = React;
+    const { useState, useEffect, useMemo, useRef } = React;
 
     // ВАШИ КЛЮЧИ SUPABASE:
-    const SUPABASE_URL = "https://radangmwyldbolbuoahx.supabase.co";
+   const SUPABASE_URL = "https://radangmwyldbolbuoahx.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhZGFuZ213eWxkYm9sYnVvYWh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1OTI3MTIsImV4cCI6MjEwOTE2ODcxMn0.qaSZOIopwidX-l1BoJo4xieISo0VQHStCeOyKvlcMQU";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -44,6 +44,147 @@
       const parts = isoDateStr.split('-');
       if (parts.length !== 3) return isoDateStr;
       return `${parts[2]}.${parts[1]}.${parts[0].slice(-2)}`;
+    }
+
+    function addDaysToIsoDate(isoDateStr, daysCount) {
+      const [y, m, d] = isoDateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      date.setDate(date.getDate() + daysCount);
+      const resY = date.getFullYear();
+      const resM = String(date.getMonth() + 1).padStart(2, '0');
+      const resD = String(date.getDate()).padStart(2, '0');
+      return `${resY}-${resM}-${resD}`;
+    }
+
+    // Компонент карточки задачи со свайпом влево/вправо
+    function SwipeableTaskItem({ task, onToggle, onDelete, onMoveToTomorrow, onMoveToCustomDate, theme }) {
+      const [dragX, setDragX] = useState(0);
+      const touchStartX = useRef(0);
+      const touchStartY = useRef(0);
+      const isDragging = useRef(false);
+      const datePickerRef = useRef(null);
+
+      const handleTouchStart = (e) => {
+        touchStartX.current = e.touches[0].clientX;
+        touchStartY.current = e.touches[0].clientY;
+        isDragging.current = true;
+      };
+
+      const handleTouchMove = (e) => {
+        if (!isDragging.current) return;
+        const diffX = e.touches[0].clientX - touchStartX.current;
+        const diffY = e.touches[0].clientY - touchStartY.current;
+
+        // Если скролл по вертикали сильнее, не свайпаем
+        if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffX) < 10) return;
+
+        // Ограничиваем размах
+        if (diffX > 140) setDragX(140);
+        else if (diffX < -140) setDragX(-140);
+        else setDragX(diffX);
+      };
+
+      const handleTouchEnd = () => {
+        if (!isDragging.current) return;
+        isDragging.current = false;
+
+        if (dragX > 75) {
+          // Свайп вправо -> на следующий день
+          onMoveToTomorrow(task);
+        } else if (dragX < -75) {
+          // Свайп влево -> открыть пикер даты
+          if (datePickerRef.current) {
+            datePickerRef.current.showPicker ? datePickerRef.current.showPicker() : datePickerRef.current.click();
+          }
+        }
+        setDragX(0);
+      };
+
+      return (
+        <div class="relative overflow-hidden rounded-2xl shadow-sm bg-slate-100 select-none">
+          {/* Скрытый инпут даты для вызова календаря */}
+          <input
+            type="date"
+            ref={datePickerRef}
+            class="absolute opacity-0 pointer-events-none w-0 h-0"
+            onChange={(e) => {
+              if (e.target.value) onMoveToCustomDate(task, e.target.value);
+            }}
+          />
+
+          {/* Левая подложка (свайп вправо: Завтра) */}
+          <div class={`absolute inset-y-0 left-0 w-full bg-emerald-500 text-white flex items-center justify-start pl-4 font-bold text-xs gap-1.5 transition-opacity ${dragX > 20 ? 'opacity-100' : 'opacity-0'}`}>
+            <span>→ На след. день</span>
+          </div>
+
+          {/* Правая подложка (свайп влево: Выбор даты) */}
+          <div class={`absolute inset-y-0 right-0 w-full bg-indigo-500 text-white flex items-center justify-end pr-4 font-bold text-xs gap-1.5 transition-opacity ${dragX < -20 ? 'opacity-100' : 'opacity-0'}`}>
+            <span>Выбрать дату 📅</span>
+          </div>
+
+          {/* Сама карточка задачи */}
+          <div
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ transform: `translateX(${dragX}px)`, transition: dragX === 0 ? 'transform 0.25s ease-out' : 'none' }}
+            class={`relative flex items-center gap-2.5 p-3 bg-white border border-slate-100 transition-colors ${
+              task.done ? 'opacity-50 bg-slate-50/80' : ''
+            }`}
+          >
+            <button
+              onClick={() => onToggle(task)}
+              class={`w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all shrink-0 ${
+                task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'
+              }`}
+            >
+              {task.done && '✓'}
+            </button>
+
+            <div class="flex-1 min-w-0 flex items-center gap-2">
+              {task.time && (
+                <span class={`text-[11px] font-mono font-bold ${theme.textAccent} ${theme.cardBg} px-1.5 py-0.5 rounded-md shrink-0`}>
+                  {task.time}
+                </span>
+              )}
+              <p class={`text-xs font-medium leading-tight truncate ${task.done ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                {task.text}
+              </p>
+            </div>
+
+            <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
+              task.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
+              task.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-100 text-slate-600'
+            }`}>
+              {task.assignee}
+            </span>
+
+            {/* Быстрые кнопки для ПК (если нет тачскрина) */}
+            <div class="hidden sm:flex items-center gap-1 shrink-0">
+              <button
+                onClick={() => onMoveToTomorrow(task)}
+                class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-semibold"
+                title="Перенести на завтра"
+              >
+                +1д
+              </button>
+              <button
+                onClick={() => {
+                  if (datePickerRef.current) datePickerRef.current.showPicker ? datePickerRef.current.showPicker() : datePickerRef.current.click();
+                }}
+                class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded"
+                title="Перенести на дату"
+              >
+                📅
+              </button>
+            </div>
+
+            <button onClick={() => onDelete(task.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1 shrink-0">
+              ✕
+            </button>
+          </div>
+        </div>
+      );
     }
 
     function FamilyPlanner() {
@@ -61,14 +202,14 @@
 
       const [filterAssignee, setFilterAssignee] = useState('Все');
 
-      // Рецепты: фильтр по категории
+      // Рецепты
       const [recipeCategoryFilter, setRecipeCategoryFilter] = useState('Все');
       const [isQuickLinkOpen, setIsQuickLinkOpen] = useState(false);
       const [quickLinkUrl, setQuickLinkUrl] = useState('');
       const [quickLinkTitle, setQuickLinkTitle] = useState('');
       const [quickLinkCategory, setQuickLinkCategory] = useState('Обед');
 
-      // Формы ввода задач
+      // Формы
       const [newTaskText, setNewTaskText] = useState('');
       const [newTaskTime, setNewTaskTime] = useState('');
       const [newTaskAssignee, setNewTaskAssignee] = useState('Общее');
@@ -93,19 +234,19 @@
         url: ''
       });
 
-      // Темизация (Рома: Синий / Марина: Розовый)
+      // Темизация (Рома: Синий / Марина: Нежно-розовый пастельный)
       const isMarina = currentUser === 'Марина';
       const theme = {
-        primary: isMarina ? 'bg-rose-500' : 'bg-blue-600',
-        primaryHover: isMarina ? 'hover:bg-rose-600' : 'hover:bg-blue-700',
-        headerBadge: isMarina ? 'bg-rose-600/90 border-rose-400/50' : 'bg-blue-700/90 border-blue-500/50',
-        activePill: isMarina ? 'bg-rose-50 text-rose-600' : 'bg-blue-50 text-blue-600',
-        activeBtn: isMarina ? 'bg-rose-500 text-white' : 'bg-blue-600 text-white',
-        borderActive: isMarina ? 'border-rose-400' : 'border-blue-500',
-        ringActive: isMarina ? 'ring-rose-200 border-rose-500' : 'ring-blue-200 border-blue-500',
-        textAccent: isMarina ? 'text-rose-600' : 'text-blue-600',
-        cardBg: isMarina ? 'bg-rose-50/70 border-rose-100' : 'bg-blue-50/70 border-blue-100',
-        btnLight: isMarina ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+        primary: isMarina ? 'bg-pink-400' : 'bg-blue-600',
+        primaryHover: isMarina ? 'hover:bg-pink-500' : 'hover:bg-blue-700',
+        headerBadge: isMarina ? 'bg-pink-500/80 border-pink-300/60' : 'bg-blue-700/90 border-blue-500/50',
+        activePill: isMarina ? 'bg-pink-50 text-pink-700' : 'bg-blue-50 text-blue-600',
+        activeBtn: isMarina ? 'bg-pink-400 text-white' : 'bg-blue-600 text-white',
+        borderActive: isMarina ? 'border-pink-300' : 'border-blue-500',
+        ringActive: isMarina ? 'ring-pink-200 border-pink-400' : 'ring-blue-200 border-blue-500',
+        textAccent: isMarina ? 'text-pink-600' : 'text-blue-600',
+        cardBg: isMarina ? 'bg-pink-50/60 border-pink-100' : 'bg-blue-50/70 border-blue-100',
+        btnLight: isMarina ? 'bg-pink-100/80 text-pink-700 hover:bg-pink-200/80' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
       };
 
       const toggleUserRole = () => {
@@ -219,6 +360,20 @@
         setCalendarViewDate(new Date());
       };
 
+      // Перенос задачи на завтра (свайп вправо)
+      const moveTaskToTomorrow = async (task) => {
+        const nextDayIso = addDaysToIsoDate(task.date, 1);
+        setTasks(tasks.map(t => t.id === task.id ? { ...t, date: nextDayIso } : t));
+        await supabase.from('tasks').update({ date: nextDayIso }).eq('id', task.id);
+      };
+
+      // Перенос задачи на выбранную дату (свайп влево)
+      const moveTaskToCustomDate = async (task, newDateIso) => {
+        if (!newDateIso || newDateIso === task.date) return;
+        setTasks(tasks.map(t => t.id === task.id ? { ...t, date: newDateIso } : t));
+        await supabase.from('tasks').update({ date: newDateIso }).eq('id', task.id);
+      };
+
       // Задачи
       const toggleTask = async (task) => {
         const nextDone = !task.done;
@@ -248,7 +403,7 @@
         await supabase.from('tasks').delete().eq('id', id);
       };
 
-      // Недельное расписание
+      // События недели
       const toggleScheduleEvent = async (ev) => {
         const nextDone = !ev.done;
         setScheduleEvents(scheduleEvents.map(s => s.id === ev.id ? { ...s, done: nextDone } : s));
@@ -303,7 +458,7 @@
         await supabase.from('backlog').delete().eq('id', id);
       };
 
-      // Рецепты: быстрое сохранение ссылки
+      // Быстрая ссылка
       const handleQuickLinkSubmit = async (e) => {
         e.preventDefault();
         if (!quickLinkUrl.trim()) return;
@@ -335,7 +490,7 @@
         await supabase.from('recipes').insert([newRec]);
       };
 
-      // Рецепты: добавление подробного блюда
+      // Свой рецепт
       const handleAddCustomRecipe = async (e) => {
         e.preventDefault();
         if (!recipeForm.title.trim()) return;
@@ -406,7 +561,7 @@
         await supabase.from('shopping').delete().eq('id', id);
       };
 
-      // Фильтрация данных
+      // Фильтрация
       const currentTasks = useMemo(() => {
         return tasks
           .filter(t => {
@@ -442,18 +597,18 @@
       return (
         <div class="max-w-md mx-auto min-h-screen bg-slate-50 flex flex-col justify-between pb-28">
           <div>
-            {/* Шапка */}
+            {/* Шапка с нежно-розовой темой Марины */}
             <header class={`${theme.primary} text-white pt-safe px-4 pb-3 sticky top-0 z-30 shadow-md transition-colors duration-300`}>
               <div class="flex items-center justify-between gap-2 pt-2">
                 <div class="min-w-0">
                   <div class="flex items-center gap-1.5">
-                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-white/20 font-black text-[11px] tracking-tight">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-white/25 font-black text-[11px] tracking-tight">
                       Р|М
                     </span>
                     <h1 class="text-base font-bold tracking-tight">Рома & Марина</h1>
                   </div>
                   <div class="flex items-center gap-1.5 mt-0.5">
-                    <span class="text-[11px] text-white/80">Роль:</span>
+                    <span class="text-[11px] text-white/90">Роль:</span>
                     <button 
                       onClick={toggleUserRole}
                       class="text-[11px] font-bold bg-white/20 hover:bg-white/30 px-2 py-0.5 rounded-full border border-white/30 active:scale-95 transition"
@@ -523,8 +678,8 @@
                           <span class="text-xs leading-none">{item.dayNumber}</span>
                           {(dayTasks.length > 0 || dayEvents.length > 0) && (
                             <div class="flex gap-0.5 mt-1">
-                              {hasUndone && <span class={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-rose-500'}`}></span>}
-                              {hasDone && <span class={`w-1 h-1 rounded-full ${isSelected ? 'bg-white/60' : 'bg-emerald-500'}`}></span>}
+                              {hasUndone && <span class={`w-1 h-1 rounded-full ${isSelected ? 'bg-white' : 'bg-pink-400'}`}></span>}
+                              {hasDone && <span class={`w-1 h-1 rounded-full ${isSelected ? 'bg-white/70' : 'bg-emerald-500'}`}></span>}
                             </div>
                           )}
                         </button>
@@ -585,7 +740,7 @@
                   </div>
                 </form>
 
-                {/* Таймлайн канбана на этот день */}
+                {/* События недели */}
                 {currentSchedule.length > 0 && (
                   <div class="space-y-2">
                     <h3 class={`text-[11px] font-bold ${theme.textAccent} uppercase tracking-wider px-1`}>
@@ -616,7 +771,7 @@
                             <span class="text-[9px] text-slate-500 font-medium">{ev.category}</span>
                             <span class={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
                               ev.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                              ev.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-200 text-slate-700'
+                              ev.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 text-slate-700'
                             }`}>
                               {ev.assignee}
                             </span>
@@ -628,12 +783,13 @@
                   </div>
                 )}
 
-                {/* Задачи на день */}
+                {/* Задачи на день со свайпами влево/вправо */}
                 <div class="space-y-2">
                   <div class="flex justify-between items-center px-1">
                     <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">
                       Задачи ({currentTasks.length})
                     </h2>
+                    <span class="text-[10px] text-slate-400">Свайп: ➔ Завтра | 📅 Дата ⬅</span>
                   </div>
 
                   {currentTasks.length === 0 && currentSchedule.length === 0 ? (
@@ -642,43 +798,15 @@
                     </div>
                   ) : (
                     currentTasks.map((task) => (
-                      <div
+                      <SwipeableTaskItem
                         key={task.id}
-                        class={`flex items-center gap-2.5 p-3 bg-white rounded-2xl shadow-sm border border-slate-100 transition ${
-                          task.done ? 'opacity-50 bg-slate-50/80' : ''
-                        }`}
-                      >
-                        <button
-                          onClick={() => toggleTask(task)}
-                          class={`w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all shrink-0 ${
-                            task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'
-                          }`}
-                        >
-                          {task.done && '✓'}
-                        </button>
-
-                        <div class="flex-1 min-w-0 flex items-center gap-2">
-                          {task.time && (
-                            <span class={`text-[11px] font-mono font-bold ${theme.textAccent} ${theme.cardBg} px-1.5 py-0.5 rounded-md shrink-0`}>
-                              {task.time}
-                            </span>
-                          )}
-                          <p class={`text-xs font-medium leading-tight truncate ${task.done ? 'line-through text-slate-400' : 'text-slate-800'}`}>
-                            {task.text}
-                          </p>
-                        </div>
-
-                        <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
-                          task.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                          task.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-600'
-                        }`}>
-                          {task.assignee}
-                        </span>
-
-                        <button onClick={() => deleteTask(task.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1 shrink-0">
-                          ✕
-                        </button>
-                      </div>
+                        task={task}
+                        onToggle={toggleTask}
+                        onDelete={deleteTask}
+                        onMoveToTomorrow={moveTaskToTomorrow}
+                        onMoveToCustomDate={moveTaskToCustomDate}
+                        theme={theme}
+                      />
                     ))
                   )}
                 </div>
@@ -806,7 +934,7 @@
                                   </div>
                                   <span class={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
                                     ev.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                                    ev.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-200 text-slate-700'
+                                    ev.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 text-slate-700'
                                   }`}>
                                     {ev.assignee}
                                   </span>
@@ -848,7 +976,7 @@
                                 </div>
                                 <span class={`text-[8px] font-bold px-1 rounded shrink-0 ${
                                   t.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                                  t.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-200 text-slate-600'
+                                  t.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 text-slate-600'
                                 }`}>
                                   {t.assignee}
                                 </span>
@@ -947,7 +1075,7 @@
 
                         <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                           task.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                          task.assignee === 'Марина' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-600'
+                          task.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-100 text-slate-600'
                         }`}>
                           {task.assignee}
                         </span>
@@ -962,7 +1090,7 @@
               </main>
             )}
 
-            {/* ВКЛАДКА 4: РЕЦЕПТЫ И ССЫЛКИ ПО КАТЕГОРИЯМ */}
+            {/* ВКЛАДКА 4: РЕЦЕПТЫ И ССЫЛКИ */}
             {activeTab === 'recipes' && (
               <main class="p-4 space-y-4">
                 <div class="flex justify-between items-center px-1">
@@ -986,7 +1114,6 @@
                   </div>
                 </div>
 
-                {/* ФОРМА БЫСТРОГО СОХРАНЕНИЯ ССЫЛКИ */}
                 {isQuickLinkOpen && (
                   <form onSubmit={handleQuickLinkSubmit} class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200/80 space-y-2.5">
                     <div class="flex justify-between items-center">
@@ -1027,7 +1154,6 @@
                   </form>
                 )}
 
-                {/* ГРАФЫ КАТЕГОРИЙ СВЕРХУ */}
                 <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                   {['Все', 'Завтрак', 'Обед', 'Ужин', 'Десерты', 'Напитки'].map(cat => (
                     <button
@@ -1044,7 +1170,6 @@
                   ))}
                 </div>
 
-                {/* СПИСОК РЕЦЕПТОВ И СОХРАНЕННЫХ ССЫЛОК */}
                 <div class="space-y-3">
                   {filteredRecipes.length === 0 ? (
                     <div class="text-center py-10 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">
@@ -1076,7 +1201,6 @@
                             </div>
                           </div>
 
-                          {/* Кнопка открытия внешней ссылки */}
                           {link && (
                             <a
                               href={link}
@@ -1088,27 +1212,24 @@
                             </a>
                           )}
 
-                          {/* Список ингредиентов (если внесены) */}
                           {recipe.ingredients && recipe.ingredients.length > 0 && (
                             <div class="text-xs text-slate-600 space-y-0.5 pt-1">
                               <p class="font-bold text-slate-500 text-[11px] mb-0.5">Ингредиенты:</p>
                               {recipe.ingredients.map((ing, i) => (
                                 <div key={i} class="flex items-center gap-1.5 text-slate-600">
-                                  <span class={`w-1.5 h-1.5 rounded-full ${isMarina ? 'bg-rose-400' : 'bg-blue-400'} shrink-0`}></span>
+                                  <span class={`w-1.5 h-1.5 rounded-full ${isMarina ? 'bg-pink-400' : 'bg-blue-400'} shrink-0`}></span>
                                   <span>{ing}</span>
                                 </div>
                               ))}
                             </div>
                           )}
 
-                          {/* Шаги приготовления (если внесены) */}
                           {recipe.steps && (
                             <p class="text-xs text-slate-600 whitespace-pre-line leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                               {recipe.steps}
                             </p>
                           )}
 
-                          {/* Кнопка отправки в корзину */}
                           {recipe.ingredients && recipe.ingredients.length > 0 && (
                             <button
                               onClick={() => addIngredientsToCart(recipe.ingredients)}
@@ -1123,7 +1244,6 @@
                   )}
                 </div>
 
-                {/* МОДАЛКА ПОЛНОГО РЕЦЕПТА */}
                 {isRecipeModalOpen && (
                   <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <div class="bg-white rounded-3xl p-5 w-full max-w-sm space-y-3 max-h-[90vh] overflow-y-auto">
