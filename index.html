@@ -27,13 +27,13 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased font-sans">
+<body class="antialiased font-sans">
   <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect, useMemo, useRef } = React;
 
-    const SUPABASE_URL = "https://radangmwyldbolbuoahx.supabase.co";
+   const SUPABASE_URL = "https://radangmwyldbolbuoahx.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhZGFuZ213eWxkYm9sYnVvYWh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1OTI3MTIsImV4cCI6MjEwOTE2ODcxMn0.qaSZOIopwidX-l1BoJo4xieISo0VQHStCeOyKvlcMQU";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -42,61 +42,61 @@
         name: 'Синий',
         primary: 'bg-blue-600',
         badge: 'bg-blue-700/90 border-blue-500/50',
-        activePill: 'bg-blue-50 text-blue-700 border-blue-400',
+        activePill: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-400',
         activeBtn: 'bg-blue-600 text-white',
-        textAccent: 'text-blue-600',
-        cardBg: 'bg-blue-50/70 border-blue-100',
-        btnLight: 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+        textAccent: 'text-blue-600 dark:text-blue-400',
+        cardBg: 'bg-blue-50/70 dark:bg-blue-950/40 border-blue-100 dark:border-blue-900/40',
+        btnLight: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 hover:bg-blue-200'
       },
       pink: {
         name: 'Розовый',
         primary: 'bg-pink-400',
         badge: 'bg-pink-500/80 border-pink-300/60',
-        activePill: 'bg-pink-50 text-pink-700 border-pink-300',
+        activePill: 'bg-pink-50 dark:bg-pink-950/60 text-pink-700 dark:text-pink-300 border-pink-300',
         activeBtn: 'bg-pink-400 text-white',
-        textAccent: 'text-pink-600',
-        cardBg: 'bg-pink-50/60 border-pink-100',
-        btnLight: 'bg-pink-100/80 text-pink-700 hover:bg-pink-200/80'
+        textAccent: 'text-pink-600 dark:text-pink-400',
+        cardBg: 'bg-pink-50/60 dark:bg-pink-950/40 border-pink-100 dark:border-pink-900/40',
+        btnLight: 'bg-pink-100/80 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300 hover:bg-pink-200/80'
       },
       lavender: {
         name: 'Лаванда',
         primary: 'bg-indigo-400',
         badge: 'bg-indigo-500/80 border-indigo-300/60',
-        activePill: 'bg-indigo-50 text-indigo-700 border-indigo-300',
+        activePill: 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-300',
         activeBtn: 'bg-indigo-400 text-white',
-        textAccent: 'text-indigo-600',
-        cardBg: 'bg-indigo-50/60 border-indigo-100',
-        btnLight: 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+        textAccent: 'text-indigo-600 dark:text-indigo-400',
+        cardBg: 'bg-indigo-50/60 dark:bg-indigo-950/40 border-indigo-100 dark:border-indigo-900/40',
+        btnLight: 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200'
       },
       mint: {
         name: 'Мята',
         primary: 'bg-emerald-500',
         badge: 'bg-emerald-600/80 border-emerald-400/60',
-        activePill: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+        activePill: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300',
         activeBtn: 'bg-emerald-500 text-white',
-        textAccent: 'text-emerald-600',
-        cardBg: 'bg-emerald-50/60 border-emerald-100',
-        btnLight: 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+        textAccent: 'text-emerald-600 dark:text-emerald-400',
+        cardBg: 'bg-emerald-50/60 dark:bg-emerald-950/40 border-emerald-100 dark:border-emerald-900/40',
+        btnLight: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200'
       },
       peach: {
         name: 'Персик',
         primary: 'bg-orange-400',
         badge: 'bg-orange-500/80 border-orange-300/60',
-        activePill: 'bg-orange-50 text-orange-800 border-orange-300',
+        activePill: 'bg-orange-50 dark:bg-orange-950/60 text-orange-800 dark:text-orange-300 border-orange-300',
         activeBtn: 'bg-orange-400 text-white',
-        textAccent: 'text-orange-600',
-        cardBg: 'bg-orange-50/60 border-orange-100',
-        btnLight: 'bg-orange-100 text-orange-800 hover:bg-orange-200'
+        textAccent: 'text-orange-600 dark:text-orange-400',
+        cardBg: 'bg-orange-50/60 dark:bg-orange-950/40 border-orange-100 dark:border-orange-900/40',
+        btnLight: 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 hover:bg-orange-200'
       },
       slate: {
         name: 'Графит',
-        primary: 'bg-slate-700',
+        primary: 'bg-slate-700 dark:bg-slate-600',
         badge: 'bg-slate-800/80 border-slate-600/60',
-        activePill: 'bg-slate-100 text-slate-800 border-slate-400',
-        activeBtn: 'bg-slate-700 text-white',
-        textAccent: 'text-slate-700',
-        cardBg: 'bg-slate-100 border-slate-200',
-        btnLight: 'bg-slate-200 text-slate-800 hover:bg-slate-300'
+        activePill: 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-400',
+        activeBtn: 'bg-slate-700 dark:bg-slate-600 text-white',
+        textAccent: 'text-slate-700 dark:text-slate-300',
+        cardBg: 'bg-slate-100 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700',
+        btnLight: 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300'
       }
     };
 
@@ -123,12 +123,11 @@
       return `${resY}-${resM}-${resD}`;
     }
 
-    function SwipeableTaskItem({ task, onToggle, onDelete, onMoveToTomorrow, onMoveToCustomDate, theme }) {
+    function SwipeableTaskItem({ task, onToggle, onDelete, onMoveToTomorrow, onRequestDateModal, theme }) {
       const [dragX, setDragX] = useState(0);
       const touchStartX = useRef(0);
       const touchStartY = useRef(0);
       const isDragging = useRef(false);
-      const datePickerRef = useRef(null);
 
       const handleTouchStart = (e) => {
         touchStartX.current = e.touches[0].clientX;
@@ -157,24 +156,13 @@
           onMoveToTomorrow(task);
         } else if (dragX < -75) {
           triggerHaptic();
-          if (datePickerRef.current) {
-            datePickerRef.current.showPicker ? datePickerRef.current.showPicker() : datePickerRef.current.click();
-          }
+          onRequestDateModal(task);
         }
         setDragX(0);
       };
 
       return (
-        <div class="relative overflow-hidden rounded-2xl shadow-sm bg-slate-100 select-none">
-          <input
-            type="date"
-            ref={datePickerRef}
-            class="absolute opacity-0 pointer-events-none w-0 h-0"
-            onChange={(e) => {
-              if (e.target.value) onMoveToCustomDate(task, e.target.value);
-            }}
-          />
-
+        <div class="relative overflow-hidden rounded-2xl shadow-sm bg-slate-100 dark:bg-slate-800/80 select-none">
           <div class={`absolute inset-y-0 left-0 w-full bg-emerald-500 text-white flex items-center justify-start pl-4 font-bold text-xs gap-1.5 transition-opacity ${dragX > 20 ? 'opacity-100' : 'opacity-0'}`}>
             <span>→ На след. день</span>
           </div>
@@ -188,14 +176,14 @@
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             style={{ transform: `translateX(${dragX}px)`, transition: dragX === 0 ? 'transform 0.25s ease-out' : 'none' }}
-            class={`relative flex items-center gap-2.5 p-3 bg-white border border-slate-100 transition-colors ${
-              task.done ? 'opacity-50 bg-slate-50/80' : ''
+            class={`relative flex items-center gap-2.5 p-3 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 transition-colors ${
+              task.done ? 'opacity-50 bg-slate-50/80 dark:bg-slate-900/60' : ''
             }`}
           >
             <button
               onClick={() => onToggle(task)}
               class={`w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all shrink-0 ${
-                task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'
+                task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600'
               }`}
             >
               {task.done && '✓'}
@@ -207,14 +195,14 @@
                   {task.time}
                 </span>
               )}
-              <p class={`text-xs font-medium leading-tight truncate ${task.done ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+              <p class={`text-xs font-medium leading-tight truncate ${task.done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}`}>
                 {task.text}
               </p>
             </div>
 
             <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
-              task.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-              task.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-100 text-slate-600'
+              task.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+              task.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
             }`}>
               {task.assignee}
             </span>
@@ -222,23 +210,21 @@
             <div class="hidden sm:flex items-center gap-1 shrink-0">
               <button
                 onClick={() => onMoveToTomorrow(task)}
-                class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-semibold"
+                class="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-semibold"
                 title="Перенести на завтра"
               >
                 +1д
               </button>
               <button
-                onClick={() => {
-                  if (datePickerRef.current) datePickerRef.current.showPicker ? datePickerRef.current.showPicker() : datePickerRef.current.click();
-                }}
-                class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded"
+                onClick={() => onRequestDateModal(task)}
+                class="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded"
                 title="Перенести на дату"
               >
                 📅
               </button>
             </div>
 
-            <button onClick={() => onDelete(task.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1 shrink-0">
+            <button onClick={() => onDelete(task.id)} class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1 shrink-0">
               ✕
             </button>
           </div>
@@ -252,7 +238,7 @@
       const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
       const [calendarViewDate, setCalendarViewDate] = useState(() => new Date());
 
-      // Цветовые темы из localStorage
+      const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('fp_dark_mode') === 'true');
       const [romaThemeKey, setRomaThemeKey] = useState(() => localStorage.getItem('fp_theme_roma') || 'blue');
       const [marinaThemeKey, setMarinaThemeKey] = useState(() => localStorage.getItem('fp_theme_marina') || 'pink');
 
@@ -270,9 +256,11 @@
       });
 
       const [filterAssignee, setFilterAssignee] = useState('Все');
-
       const [isCalendarDoneOpen, setIsCalendarDoneOpen] = useState(false);
       const [isBacklogDoneOpen, setIsBacklogDoneOpen] = useState(false);
+
+      const [moveModalTask, setMoveModalTask] = useState(null);
+      const [customDateInput, setCustomDateInput] = useState('');
 
       const [recipeCategoryFilter, setRecipeCategoryFilter] = useState('Все');
       const [isQuickLinkOpen, setIsQuickLinkOpen] = useState(false);
@@ -307,6 +295,19 @@
 
       const currentThemeKey = currentUser === 'Рома' ? romaThemeKey : marinaThemeKey;
       const theme = THEME_PALETTES[currentThemeKey] || THEME_PALETTES.blue;
+
+      useEffect(() => {
+        if (isDarkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        localStorage.setItem('fp_dark_mode', isDarkMode);
+      }, [isDarkMode]);
+
+      const toggleDarkMode = () => {
+        setIsDarkMode(prev => !prev);
+      };
 
       const setAndSaveUserTheme = (colorKey) => {
         if (currentUser === 'Рома') {
@@ -369,7 +370,7 @@
         window.addEventListener('offline', handleOffline);
 
         const channel = supabase
-          .channel('schema-db-all-sync-v2')
+          .channel('schema-db-all-sync-v3')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
             supabase.from('tasks').select('*').then(res => res.data && setTasks(res.data));
           })
@@ -462,10 +463,12 @@
         await supabase.from('tasks').update({ date: nextDayIso }).eq('id', task.id);
       };
 
-      const moveTaskToCustomDate = async (task, newDateIso) => {
-        if (!newDateIso || newDateIso === task.date) return;
+      const applyMoveToDate = async (newDateIso) => {
+        if (!moveModalTask || !newDateIso) return;
+        const task = moveModalTask;
         setTasks(tasks.map(t => t.id === task.id ? { ...t, date: newDateIso } : t));
         logActivity(`перенес(ла) на ${formatDateToDDMMYY(newDateIso)}: "${task.text}"`);
+        setMoveModalTask(null);
         await supabase.from('tasks').update({ date: newDateIso }).eq('id', task.id);
       };
 
@@ -667,7 +670,6 @@
         await supabase.from('shopping').delete().eq('id', id);
       };
 
-      // Очистка вычеркнутых покупок
       const clearCompletedShopping = async () => {
         const completedIds = shoppingList.filter(i => i.done).map(i => i.id);
         if (!completedIds.length) return;
@@ -678,7 +680,6 @@
         }
       };
 
-      // Добавление базового недельного набора продуктов
       const addStandardGroceryKit = async () => {
         const defaultKit = ['Молоко', 'Яйца (десяток)', 'Хлеб', 'Сливочное масло', 'Сыр твердый'];
         const newItems = defaultKit.map(name => ({
@@ -692,7 +693,6 @@
         await supabase.from('shopping').insert(newItems);
       };
 
-      // Добавление новой категории в канбан
       const handleAddCategory = (e) => {
         e.preventDefault();
         if (!newCustomCategoryInput.trim()) return;
@@ -709,7 +709,6 @@
         localStorage.setItem('fp_custom_categories', JSON.stringify(updated));
       };
 
-      // Экспорт данных (Backup)
       const exportFamilyDataBackup = () => {
         const data = { tasks, backlogTasks, scheduleEvents, recipes, shoppingList, exportDate: new Date().toISOString() };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -762,7 +761,7 @@
       }, [recipes, recipeCategoryFilter]);
 
       return (
-        <div class="max-w-md mx-auto min-h-screen bg-slate-50 flex flex-col justify-between pb-28">
+        <div class="max-w-md mx-auto min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col justify-between pb-28 transition-colors duration-200">
           <div>
             {/* ШАПКА */}
             <header class={`${theme.primary} text-white pt-safe px-4 pb-3 sticky top-0 z-30 shadow-md transition-colors duration-300`}>
@@ -808,25 +807,25 @@
             {/* ВКЛАДКА 1: КАЛЕНДАРЬ */}
             {activeTab === 'calendar' && (
               <main class="p-4 space-y-3.5">
-                <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-100">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 shadow-sm border border-slate-100 dark:border-slate-800">
                   <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider capitalize">
+                    <h2 class="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider capitalize">
                       {monthName}
                     </h2>
                     <div class="flex gap-1.5">
-                      <button onClick={() => changeMonth(-1)} class="w-7 h-7 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center justify-center font-bold text-xs">
+                      <button onClick={() => changeMonth(-1)} class="w-7 h-7 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg flex items-center justify-center font-bold text-xs">
                         ‹
                       </button>
                       <button onClick={() => { setCalendarViewDate(new Date()); setSelectedDate(new Date().toISOString().split('T')[0]); }} class={`px-2 h-7 ${theme.btnLight} rounded-lg text-xs font-semibold`}>
                         Сегодня
                       </button>
-                      <button onClick={() => changeMonth(1)} class="w-7 h-7 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center justify-center font-bold text-xs">
+                      <button onClick={() => changeMonth(1)} class="w-7 h-7 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg flex items-center justify-center font-bold text-xs">
                         ›
                       </button>
                     </div>
                   </div>
 
-                  <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 mb-1">
+                  <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 dark:text-slate-500 mb-1">
                     <span>ПН</span><span>ВТ</span><span>СР</span><span>ЧТ</span><span>ПТ</span><span>СБ</span><span>ВС</span>
                   </div>
 
@@ -851,7 +850,7 @@
                               ? `${theme.activeBtn} font-bold shadow-sm` 
                               : isToday 
                               ? `${theme.activePill} font-bold border` 
-                              : 'text-slate-700 hover:bg-slate-100'
+                              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                           }`}
                         >
                           <span class="text-xs leading-none">{item.dayNumber}</span>
@@ -867,13 +866,13 @@
                   </div>
                 </div>
 
-                <div class="grid grid-cols-4 gap-1 bg-slate-200/80 p-1 rounded-xl text-xs font-semibold">
+                <div class="grid grid-cols-4 gap-1 bg-slate-200/80 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-semibold">
                   {['Все', 'Рома', 'Марина', 'Общее'].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setFilterAssignee(tab)}
                       class={`py-1.5 rounded-lg transition-all text-center ${
-                        filterAssignee === tab ? `bg-white ${theme.textAccent} shadow-sm font-bold` : 'text-slate-600'
+                        filterAssignee === tab ? `bg-white dark:bg-slate-900 ${theme.textAccent} shadow-sm font-bold` : 'text-slate-600 dark:text-slate-400'
                       }`}
                     >
                       {tab}
@@ -881,20 +880,20 @@
                   ))}
                 </div>
 
-                <form onSubmit={addTask} class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 space-y-2">
+                <form onSubmit={addTask} class="bg-white dark:bg-slate-900 p-2.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-2">
                   <div class="flex gap-2">
                     <input
                       type="time"
                       value={newTaskTime}
                       onChange={(e) => setNewTaskTime(e.target.value)}
-                      class="bg-slate-100 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 outline-none"
+                      class="bg-slate-100 dark:bg-slate-800 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none"
                     />
                     <input
                       type="text"
                       placeholder="Дело на день..."
                       value={newTaskText}
                       onChange={(e) => setNewTaskText(e.target.value)}
-                      class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none focus:border-indigo-500"
+                      class="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-100 placeholder-slate-400"
                     />
                   </div>
                   <div class="flex gap-2 justify-between items-center">
@@ -905,7 +904,7 @@
                       <select
                         value={newTaskAssignee}
                         onChange={(e) => setNewTaskAssignee(e.target.value)}
-                        class="bg-slate-50 border border-slate-200 text-xs font-medium rounded-xl px-2.5 py-1.5 text-slate-700 outline-none"
+                        class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium rounded-xl px-2.5 py-1.5 text-slate-700 dark:text-slate-200 outline-none"
                       >
                         <option value="Общее">Оба</option>
                         <option value="Рома">Рома</option>
@@ -926,33 +925,33 @@
                     <div class="space-y-1.5">
                       {currentSchedule.map(ev => (
                         <div key={ev.id} class={`flex items-center justify-between p-2.5 ${theme.cardBg} rounded-2xl transition ${
-                          ev.done ? 'opacity-50 line-through bg-slate-100' : ''
+                          ev.done ? 'opacity-50 line-through bg-slate-100 dark:bg-slate-900/60' : ''
                         }`}>
                           <div class="flex items-center gap-2 min-w-0">
                             <button
                               onClick={() => toggleScheduleEvent(ev)}
                               class={`w-5 h-5 rounded-md border flex items-center justify-center font-bold text-[10px] shrink-0 ${
-                                ev.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 bg-white'
+                                ev.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'
                               }`}
                             >
                               {ev.done && '✓'}
                             </button>
-                            <span class={`text-xs font-mono font-bold ${theme.textAccent} bg-white px-1.5 py-0.5 rounded-md shadow-xs shrink-0`}>
+                            <span class={`text-xs font-mono font-bold ${theme.textAccent} bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded-md shadow-xs shrink-0`}>
                               {ev.time}
                             </span>
-                            <span class={`text-xs font-semibold truncate ${ev.done ? 'text-slate-400' : 'text-slate-800'}`}>
+                            <span class={`text-xs font-semibold truncate ${ev.done ? 'text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}`}>
                               {ev.title}
                             </span>
                           </div>
                           <div class="flex items-center gap-1.5 shrink-0">
-                            <span class="text-[9px] text-slate-500 font-medium">{ev.category}</span>
+                            <span class="text-[9px] text-slate-500 dark:text-slate-400 font-medium">{ev.category}</span>
                             <span class={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
-                              ev.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                              ev.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 text-slate-700'
+                              ev.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+                              ev.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                             }`}>
                               {ev.assignee}
                             </span>
-                            <button onClick={() => deleteScheduleEvent(ev.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1">✕</button>
+                            <button onClick={() => deleteScheduleEvent(ev.id)} class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1">✕</button>
                           </div>
                         </div>
                       ))}
@@ -969,7 +968,7 @@
                   </div>
 
                   {activeCalendarTasks.length === 0 && currentSchedule.length === 0 && doneCalendarTasks.length === 0 ? (
-                    <div class="text-center py-6 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">
+                    <div class="text-center py-6 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 text-xs">
                       Нет дел на {formatDateToDDMMYY(selectedDate)} ☕
                     </div>
                   ) : (
@@ -980,17 +979,17 @@
                         onToggle={toggleTask}
                         onDelete={deleteTask}
                         onMoveToTomorrow={moveTaskToTomorrow}
-                        onMoveToCustomDate={moveTaskToCustomDate}
+                        onRequestDateModal={(t) => { setMoveModalTask(t); setCustomDateInput(t.date || selectedDate); }}
                         theme={theme}
                       />
                     ))
                   )}
 
                   {doneCalendarTasks.length > 0 && (
-                    <div class="pt-2 border-t border-slate-200/60">
+                    <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800">
                       <button
                         onClick={() => setIsCalendarDoneOpen(!isCalendarDoneOpen)}
-                        class="w-full flex items-center justify-between py-2 px-2 text-xs font-bold text-slate-500 hover:text-slate-700 transition"
+                        class="w-full flex items-center justify-between py-2 px-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 transition"
                       >
                         <span class="flex items-center gap-1.5">
                           <span>✓</span>
@@ -1008,7 +1007,7 @@
                               onToggle={toggleTask}
                               onDelete={deleteTask}
                               onMoveToTomorrow={moveTaskToTomorrow}
-                              onMoveToCustomDate={moveTaskToCustomDate}
+                              onRequestDateModal={(t) => { setMoveModalTask(t); setCustomDateInput(t.date || selectedDate); }}
                               theme={theme}
                             />
                           ))}
@@ -1031,7 +1030,7 @@
                   <div class="flex items-center gap-1">
                     <button 
                       onClick={() => shiftWeek(-7)} 
-                      class="w-7 h-7 bg-white hover:bg-slate-100 text-slate-600 rounded-lg flex items-center justify-center font-bold text-xs border border-slate-200 active:scale-95"
+                      class="w-7 h-7 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg flex items-center justify-center font-bold text-xs border border-slate-200 dark:border-slate-700 active:scale-95"
                     >
                       ‹
                     </button>
@@ -1043,34 +1042,34 @@
                     </button>
                     <button 
                       onClick={() => shiftWeek(7)} 
-                      class="w-7 h-7 bg-white hover:bg-slate-100 text-slate-600 rounded-lg flex items-center justify-center font-bold text-xs border border-slate-200 active:scale-95"
+                      class="w-7 h-7 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg flex items-center justify-center font-bold text-xs border border-slate-200 dark:border-slate-700 active:scale-95"
                     >
                       ›
                     </button>
                   </div>
                 </div>
 
-                <form onSubmit={addScheduleEvent} class="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 space-y-2">
+                <form onSubmit={addScheduleEvent} class="bg-white dark:bg-slate-900 p-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-2">
                   <div class="flex gap-2">
                     <input
                       type="time"
                       value={kanbanTime}
                       onChange={(e) => setKanbanTime(e.target.value)}
-                      class="bg-slate-100 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 outline-none"
+                      class="bg-slate-100 dark:bg-slate-800 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none"
                     />
                     <input
                       type="text"
                       placeholder="Врач, тренировка, встреча..."
                       value={kanbanTitle}
                       onChange={(e) => setKanbanTitle(e.target.value)}
-                      class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none focus:border-indigo-500"
+                      class="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-100 placeholder-slate-400"
                     />
                   </div>
                   <div class="flex gap-2">
                     <select
                       value={kanbanCategory}
                       onChange={(e) => setKanbanCategory(e.target.value)}
-                      class="flex-1 bg-slate-50 border border-slate-200 text-xs rounded-xl px-2 py-1.5 text-slate-700 outline-none"
+                      class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs rounded-xl px-2 py-1.5 text-slate-700 dark:text-slate-200 outline-none"
                     >
                       {categories.map((cat, i) => (
                         <option key={i} value={cat}>{cat}</option>
@@ -1079,7 +1078,7 @@
                     <select
                       value={kanbanAssignee}
                       onChange={(e) => setKanbanAssignee(e.target.value)}
-                      class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-2 py-1.5 text-slate-700 outline-none"
+                      class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs rounded-xl px-2 py-1.5 text-slate-700 dark:text-slate-200 outline-none"
                     >
                       <option value="Общее">Оба</option>
                       <option value="Рома">Рома</option>
@@ -1102,17 +1101,17 @@
                       <div 
                         key={col.isoDate} 
                         onClick={() => setSelectedDate(col.isoDate)}
-                        class={`min-w-[220px] w-[220px] shrink-0 bg-white rounded-2xl p-3 shadow-sm border transition snap-start flex flex-col justify-between cursor-pointer ${
-                          isSelected ? 'border-2 border-slate-400' : 'border-slate-100'
+                        class={`min-w-[220px] w-[220px] shrink-0 bg-white dark:bg-slate-900 rounded-2xl p-3 shadow-sm border transition snap-start flex flex-col justify-between cursor-pointer ${
+                          isSelected ? 'border-2 border-slate-400 dark:border-slate-500' : 'border-slate-100 dark:border-slate-800'
                         }`}
                       >
                         <div>
-                          <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                          <div class="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
                             <div>
-                              <span class="text-xs font-bold text-slate-700">{col.name}</span>
+                              <span class="text-xs font-bold text-slate-700 dark:text-slate-200">{col.name}</span>
                               <span class="text-[10px] text-slate-400 ml-1.5 font-mono">{col.dateStr}</span>
                             </div>
-                            <span class={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isSelected ? theme.primary + ' text-white' : 'bg-slate-100 text-slate-500'}`}>
+                            <span class={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isSelected ? theme.primary + ' text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>
                               {totalItems}
                             </span>
                           </div>
@@ -1120,37 +1119,37 @@
                           <div class="mt-2.5 space-y-2 min-h-[140px]">
                             {dayEvents.map(ev => (
                               <div key={ev.id} class={`p-2 rounded-xl border transition ${
-                                ev.done ? 'bg-slate-100/80 border-slate-200 opacity-60' : theme.cardBg
+                                ev.done ? 'bg-slate-100/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 opacity-60' : theme.cardBg
                               }`}>
                                 <div class="flex items-center justify-between">
                                   <div class="flex items-center gap-1.5">
                                     <button
                                       onClick={(e) => { e.stopPropagation(); toggleScheduleEvent(ev); }}
                                       class={`w-4 h-4 rounded border flex items-center justify-center font-bold text-[9px] ${
-                                        ev.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 bg-white'
+                                        ev.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'
                                       }`}
                                     >
                                       {ev.done && '✓'}
                                     </button>
-                                    <span class={`text-[10px] font-mono font-bold ${theme.textAccent} bg-white px-1 rounded shadow-2xs`}>
+                                    <span class={`text-[10px] font-mono font-bold ${theme.textAccent} bg-white dark:bg-slate-800 px-1 rounded shadow-2xs`}>
                                       {ev.time}
                                     </span>
                                   </div>
                                   <span class={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
-                                    ev.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                                    ev.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 text-slate-700'
+                                    ev.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+                                    ev.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                                   }`}>
                                     {ev.assignee}
                                   </span>
                                 </div>
-                                <p class={`text-xs font-semibold mt-1 leading-tight ${ev.done ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                                <p class={`text-xs font-semibold mt-1 leading-tight ${ev.done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}`}>
                                   {ev.title}
                                 </p>
                                 <div class="flex justify-between items-center mt-1">
-                                  <span class="text-[9px] text-slate-500 font-medium">{ev.category}</span>
+                                  <span class="text-[9px] text-slate-500 dark:text-slate-400 font-medium">{ev.category}</span>
                                   <button 
                                     onClick={(e) => { e.stopPropagation(); deleteScheduleEvent(ev.id); }}
-                                    class="text-slate-300 hover:text-rose-500 text-[10px]"
+                                    class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-[10px]"
                                   >
                                     ✕
                                   </button>
@@ -1159,28 +1158,28 @@
                             ))}
 
                             {dayTasks.map(t => (
-                              <div key={t.id} class="bg-slate-50 p-2 rounded-xl border border-slate-100 flex items-center justify-between gap-1.5">
+                              <div key={t.id} class="bg-slate-50 dark:bg-slate-800/80 p-2 rounded-xl border border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-1.5">
                                 <div class="flex items-center gap-1.5 min-w-0">
                                   <button
                                     onClick={(e) => { e.stopPropagation(); toggleTask(t); }}
                                     class={`w-4 h-4 rounded border flex items-center justify-center font-bold text-[9px] shrink-0 ${
-                                      t.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 bg-white'
+                                      t.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'
                                     }`}
                                   >
                                     {t.done && '✓'}
                                   </button>
                                   {t.time && (
-                                    <span class={`text-[9px] font-mono font-bold ${theme.textAccent} bg-white px-1 rounded shrink-0`}>
+                                    <span class={`text-[9px] font-mono font-bold ${theme.textAccent} bg-white dark:bg-slate-800 px-1 rounded shrink-0`}>
                                       {t.time}
                                     </span>
                                   )}
-                                  <span class={`text-xs leading-tight truncate ${t.done ? 'line-through text-slate-400' : 'text-slate-700'}`}>
+                                  <span class={`text-xs leading-tight truncate ${t.done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200'}`}>
                                     {t.text}
                                   </span>
                                 </div>
                                 <span class={`text-[8px] font-bold px-1 rounded shrink-0 ${
-                                  t.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                                  t.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 text-slate-600'
+                                  t.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+                                  t.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                                 }`}>
                                   {t.assignee}
                                 </span>
@@ -1188,14 +1187,14 @@
                             ))}
 
                             {totalItems === 0 && (
-                              <div class="h-full flex items-center justify-center text-[11px] text-slate-300 py-6">
+                              <div class="h-full flex items-center justify-center text-[11px] text-slate-300 dark:text-slate-600 py-6">
                                 Свободно
                               </div>
                             )}
                           </div>
                         </div>
 
-                        <div class={`text-[10px] text-center ${theme.textAccent} font-semibold mt-2 pt-1 border-t border-slate-50`}>
+                        <div class={`text-[10px] text-center ${theme.textAccent} font-semibold mt-2 pt-1 border-t border-slate-50 dark:border-slate-800`}>
                           {isSelected ? '✓ Выбранный день' : 'Тапнуть чтобы выбрать'}
                         </div>
                       </div>
@@ -1213,13 +1212,13 @@
                   <p class="text-[11px] text-slate-500">Планы, покупки на будущее, идеи</p>
                 </div>
 
-                <div class="grid grid-cols-4 gap-1 bg-slate-200/80 p-1 rounded-xl text-xs font-semibold">
+                <div class="grid grid-cols-4 gap-1 bg-slate-200/80 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-semibold">
                   {['Все', 'Рома', 'Марина', 'Общее'].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setFilterAssignee(tab)}
                       class={`py-1.5 rounded-lg transition-all text-center ${
-                        filterAssignee === tab ? `bg-white ${theme.textAccent} shadow-sm font-bold` : 'text-slate-600'
+                        filterAssignee === tab ? `bg-white dark:bg-slate-900 ${theme.textAccent} shadow-sm font-bold` : 'text-slate-600 dark:text-slate-400'
                       }`}
                     >
                       {tab}
@@ -1227,18 +1226,18 @@
                   ))}
                 </div>
 
-                <form onSubmit={addBacklogTask} class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 flex gap-2">
+                <form onSubmit={addBacklogTask} class="bg-white dark:bg-slate-900 p-2.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex gap-2">
                   <input
                     type="text"
                     placeholder="Например: Починить полку..."
                     value={newBacklogText}
                     onChange={(e) => setNewBacklogText(e.target.value)}
-                    class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500"
+                    class="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-100 placeholder-slate-400"
                   />
                   <select
                     value={newBacklogAssignee}
                     onChange={(e) => setNewBacklogAssignee(e.target.value)}
-                    class="bg-slate-50 border border-slate-200 text-xs font-medium rounded-xl px-2 text-slate-700 outline-none"
+                    class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium rounded-xl px-2 text-slate-700 dark:text-slate-200 outline-none"
                   >
                     <option value="Общее">Оба</option>
                     <option value="Рома">Рома</option>
@@ -1251,36 +1250,36 @@
 
                 <div class="space-y-2">
                   {activeBacklogTasks.length === 0 && doneBacklogTasks.length === 0 ? (
-                    <div class="text-center py-8 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">
+                    <div class="text-center py-8 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 text-xs">
                       Список свободных дел пуст ✨
                     </div>
                   ) : (
                     activeBacklogTasks.map((task) => (
                       <div
                         key={task.id}
-                        class="flex items-center gap-2.5 p-3 bg-white rounded-2xl shadow-sm border border-slate-100 transition"
+                        class="flex items-center gap-2.5 p-3 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition"
                       >
                         <button
                           onClick={() => toggleBacklog(task)}
-                          class="w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all border-slate-300"
+                          class="w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all border-slate-300 dark:border-slate-600"
                         >
                           {task.done && '✓'}
                         </button>
 
                         <div class="flex-1 min-w-0">
-                          <p class="text-xs font-medium leading-tight truncate text-slate-800">
+                          <p class="text-xs font-medium leading-tight truncate text-slate-800 dark:text-slate-100">
                             {task.text}
                           </p>
                         </div>
 
                         <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                          task.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                          task.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-100 text-slate-600'
+                          task.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+                          task.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                         }`}>
                           {task.assignee}
                         </span>
 
-                        <button onClick={() => deleteBacklogTask(task.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1">
+                        <button onClick={() => deleteBacklogTask(task.id)} class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1">
                           ✕
                         </button>
                       </div>
@@ -1288,10 +1287,10 @@
                   )}
 
                   {doneBacklogTasks.length > 0 && (
-                    <div class="pt-2 border-t border-slate-200/60">
+                    <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800">
                       <button
                         onClick={() => setIsBacklogDoneOpen(!isBacklogDoneOpen)}
-                        class="w-full flex items-center justify-between py-2 px-2 text-xs font-bold text-slate-500 hover:text-slate-700 transition"
+                        class="w-full flex items-center justify-between py-2 px-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 transition"
                       >
                         <span class="flex items-center gap-1.5">
                           <span>✓</span>
@@ -1305,7 +1304,7 @@
                           {doneBacklogTasks.map((task) => (
                             <div
                               key={task.id}
-                              class="flex items-center gap-2.5 p-3 bg-white rounded-2xl shadow-sm border border-slate-100 transition opacity-50 bg-slate-50/80"
+                              class="flex items-center gap-2.5 p-3 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition opacity-50 bg-slate-50/80 dark:bg-slate-900/60"
                             >
                               <button
                                 onClick={() => toggleBacklog(task)}
@@ -1315,19 +1314,19 @@
                               </button>
 
                               <div class="flex-1 min-w-0">
-                                <p class="text-xs font-medium leading-tight truncate line-through text-slate-400">
+                                <p class="text-xs font-medium leading-tight truncate line-through text-slate-400 dark:text-slate-500">
                                   {task.text}
                                 </p>
                               </div>
 
                               <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                                task.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                                task.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-100 text-slate-600'
+                                task.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+                                task.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                               }`}>
                                 {task.assignee}
                               </span>
 
-                              <button onClick={() => deleteBacklogTask(task.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1">
+                              <button onClick={() => deleteBacklogTask(task.id)} class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1">
                                 ✕
                               </button>
                             </div>
@@ -1351,7 +1350,7 @@
                   <div class="flex gap-1.5">
                     <button
                       onClick={() => setIsQuickLinkOpen(!isQuickLinkOpen)}
-                      class="bg-white border border-slate-200 text-slate-700 text-[11px] font-bold py-1.5 px-2.5 rounded-xl active:scale-95 transition shadow-2xs"
+                      class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[11px] font-bold py-1.5 px-2.5 rounded-xl active:scale-95 transition shadow-2xs"
                     >
                       🔗 Ссылка
                     </button>
@@ -1365,9 +1364,9 @@
                 </div>
 
                 {isQuickLinkOpen && (
-                  <form onSubmit={handleQuickLinkSubmit} class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200/80 space-y-2.5">
+                  <form onSubmit={handleQuickLinkSubmit} class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 shadow-sm border border-slate-200/80 dark:border-slate-800 space-y-2.5">
                     <div class="flex justify-between items-center">
-                      <span class="text-xs font-bold text-slate-800">Быстро сохранить ссылку на блюдо</span>
+                      <span class="text-xs font-bold text-slate-800 dark:text-slate-100">Быстро сохранить ссылку на блюдо</span>
                       <button type="button" onClick={() => setIsQuickLinkOpen(false)} class="text-slate-400 text-xs">✕</button>
                     </div>
                     <input
@@ -1376,7 +1375,7 @@
                       placeholder="Вставьте ссылку (https://...)"
                       value={quickLinkUrl}
                       onChange={(e) => setQuickLinkUrl(e.target.value)}
-                      class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500"
+                      class="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-100 placeholder-slate-400"
                     />
                     <div class="flex gap-2">
                       <input
@@ -1384,12 +1383,12 @@
                         placeholder="Название (по желанию)"
                         value={quickLinkTitle}
                         onChange={(e) => setQuickLinkTitle(e.target.value)}
-                        class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none"
+                        class="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs outline-none text-slate-800 dark:text-slate-100"
                       />
                       <select
                         value={quickLinkCategory}
                         onChange={(e) => setQuickLinkCategory(e.target.value)}
-                        class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-2 py-1.5 text-slate-700 outline-none"
+                        class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs rounded-xl px-2 py-1.5 text-slate-700 dark:text-slate-200 outline-none"
                       >
                         <option value="Завтрак">Завтрак</option>
                         <option value="Обед">Обед</option>
@@ -1412,7 +1411,7 @@
                       class={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                         recipeCategoryFilter === cat 
                           ? `${theme.activeBtn} shadow-xs` 
-                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                          : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850'
                       }`}
                     >
                       {cat}
@@ -1422,7 +1421,7 @@
 
                 <div class="space-y-3">
                   {filteredRecipes.length === 0 ? (
-                    <div class="text-center py-10 bg-white rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">
+                    <div class="text-center py-10 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 text-xs">
                       В категории «{recipeCategoryFilter}» пока нет рецептов.
                     </div>
                   ) : (
@@ -1430,13 +1429,13 @@
                       const link = recipe.sourceurl || recipe.sourceUrl;
 
                       return (
-                        <div key={recipe.id} class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-100 space-y-2">
+                        <div key={recipe.id} class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 shadow-sm border border-slate-100 dark:border-slate-800 space-y-2">
                           <div class="flex justify-between items-start gap-2">
                             <div class="min-w-0">
                               <span class={`text-[10px] font-bold uppercase tracking-wider ${theme.btnLight} px-2 py-0.5 rounded-md inline-block`}>
                                 {recipe.category}
                               </span>
-                              <h4 class="text-sm font-bold text-slate-800 mt-1 leading-snug">
+                              <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100 mt-1 leading-snug">
                                 {recipe.title}
                               </h4>
                             </div>
@@ -1444,7 +1443,7 @@
                               {recipe.time && <span class="text-xs text-slate-400">⏱️ {recipe.time}</span>}
                               <button 
                                 onClick={() => deleteRecipe(recipe.id)}
-                                class="text-slate-300 hover:text-rose-500 text-xs p-1"
+                                class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1"
                               >
                                 ✕
                               </button>
@@ -1456,17 +1455,17 @@
                               href={link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition mt-1"
+                              class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition mt-1"
                             >
                               <span>🔗</span> Открыть рецепт на сайте ↗
                             </a>
                           )}
 
                           {recipe.ingredients && recipe.ingredients.length > 0 && (
-                            <div class="text-xs text-slate-600 space-y-0.5 pt-1">
-                              <p class="font-bold text-slate-500 text-[11px] mb-0.5">Ингредиенты:</p>
+                            <div class="text-xs text-slate-600 dark:text-slate-300 space-y-0.5 pt-1">
+                              <p class="font-bold text-slate-500 dark:text-slate-400 text-[11px] mb-0.5">Ингредиенты:</p>
                               {recipe.ingredients.map((ing, i) => (
-                                <div key={i} class="flex items-center gap-1.5 text-slate-600">
+                                <div key={i} class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
                                   <span class="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>
                                   <span>{ing}</span>
                                 </div>
@@ -1475,7 +1474,7 @@
                           )}
 
                           {recipe.steps && (
-                            <p class="text-xs text-slate-600 whitespace-pre-line leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                            <p class="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60">
                               {recipe.steps}
                             </p>
                           )}
@@ -1495,10 +1494,10 @@
                 </div>
 
                 {isRecipeModalOpen && (
-                  <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div class="bg-white rounded-3xl p-5 w-full max-w-sm space-y-3 max-h-[90vh] overflow-y-auto">
+                  <div class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 w-full max-w-sm space-y-3 max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-800 shadow-2xl">
                       <div class="flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-slate-800">Добавить рецепт</h3>
+                        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Добавить рецепт</h3>
                         <button onClick={() => setIsRecipeModalOpen(false)} class="text-slate-400 text-base">✕</button>
                       </div>
 
@@ -1509,13 +1508,13 @@
                           placeholder="Название блюда *"
                           value={recipeForm.title}
                           onChange={(e) => setRecipeForm({ ...recipeForm, title: e.target.value })}
-                          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500"
+                          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-100"
                         />
                         <div class="flex gap-2">
                           <select
                             value={recipeForm.category}
                             onChange={(e) => setRecipeForm({ ...recipeForm, category: e.target.value })}
-                            class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-2.5 py-2 text-slate-700 outline-none flex-1"
+                            class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs rounded-xl px-2.5 py-2 text-slate-700 dark:text-slate-200 outline-none flex-1"
                           >
                             <option value="Завтрак">Завтрак</option>
                             <option value="Обед">Обед</option>
@@ -1528,7 +1527,7 @@
                             placeholder="Время (напр. 30 мин)"
                             value={recipeForm.time}
                             onChange={(e) => setRecipeForm({ ...recipeForm, time: e.target.value })}
-                            class="w-32 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs outline-none"
+                            class="w-32 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-xs outline-none text-slate-800 dark:text-slate-100"
                           />
                         </div>
 
@@ -1537,7 +1536,7 @@
                           placeholder="Ссылка на рецепт в сети (по желанию)"
                           value={recipeForm.url}
                           onChange={(e) => setRecipeForm({ ...recipeForm, url: e.target.value })}
-                          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"
+                          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none text-slate-800 dark:text-slate-100"
                         />
 
                         <textarea
@@ -1545,7 +1544,7 @@
                           placeholder="Ингредиенты (каждый с новой строчки)..."
                           value={recipeForm.ingredientsText}
                           onChange={(e) => setRecipeForm({ ...recipeForm, ingredientsText: e.target.value })}
-                          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"
+                          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none text-slate-800 dark:text-slate-100"
                         ></textarea>
 
                         <textarea
@@ -1553,7 +1552,7 @@
                           placeholder="Шаги приготовления..."
                           value={recipeForm.steps}
                           onChange={(e) => setRecipeForm({ ...recipeForm, steps: e.target.value })}
-                          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"
+                          class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none text-slate-800 dark:text-slate-100"
                         ></textarea>
 
                         <button type="submit" class={`w-full ${theme.primary} text-white text-xs font-bold py-2.5 rounded-xl shadow-md active:scale-98`}>
@@ -1576,14 +1575,14 @@
                   <div class="flex gap-2">
                     <button
                       onClick={addStandardGroceryKit}
-                      class="text-[11px] font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-xl transition"
+                      class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 px-2.5 py-1 rounded-xl transition"
                     >
                       + Стандартный набор
                     </button>
                     {shoppingList.some(i => i.done) && (
                       <button
                         onClick={clearCompletedShopping}
-                        class="text-[11px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-2 py-1 rounded-xl transition"
+                        class="text-[11px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 px-2 py-1 rounded-xl transition"
                       >
                         Очистить ✓
                       </button>
@@ -1591,13 +1590,13 @@
                   </div>
                 </div>
 
-                <form onSubmit={addShopItem} class="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex gap-2">
+                <form onSubmit={addShopItem} class="bg-white dark:bg-slate-900 p-2 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex gap-2">
                   <input
                     type="text"
                     placeholder="Что купить в магазине..."
                     value={newShopItem}
                     onChange={(e) => setNewShopItem(e.target.value)}
-                    class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500"
+                    class="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-100 placeholder-slate-400"
                   />
                   <button type="submit" class={`${theme.primary} text-white px-3.5 py-2 rounded-xl text-sm font-bold active:scale-95 transition`}>
                     +
@@ -1609,21 +1608,21 @@
                     <div
                       key={item.id}
                       onClick={() => toggleShopItem(item)}
-                      class={`flex items-center justify-between p-3 bg-white rounded-xl shadow-sm border border-slate-100 cursor-pointer transition ${
-                        item.done ? 'opacity-40 line-through bg-slate-50' : ''
+                      class={`flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer transition ${
+                        item.done ? 'opacity-40 line-through bg-slate-50 dark:bg-slate-900/40' : ''
                       }`}
                     >
                       <div class="flex items-center gap-2.5 min-w-0">
                         <div class={`w-5 h-5 rounded-md border flex items-center justify-center text-xs font-bold ${
-                          item.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'
+                          item.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600'
                         }`}>
                           {item.done && '✓'}
                         </div>
-                        <span class="text-xs font-medium text-slate-700 truncate">{item.text}</span>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-200 truncate">{item.text}</span>
                       </div>
                       <button 
                         onClick={(e) => deleteShopItem(item.id, e)} 
-                        class="text-slate-300 hover:text-rose-500 text-xs px-2 py-1"
+                        class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs px-2 py-1"
                       >
                         ✕
                       </button>
@@ -1633,7 +1632,7 @@
               </main>
             )}
 
-            {/* ВКЛАДКА 6: НАСТРОЙКИ, ИСТОРИЯ И УПРАВЛЕНИЕ */}
+            {/* ВКЛАДКА 6: НАСТРОЙКИ */}
             {activeTab === 'settings' && (
               <main class="p-4 space-y-4">
                 <div class="flex justify-between items-center px-1">
@@ -1643,16 +1642,34 @@
                   </div>
                   <button
                     onClick={() => setActiveTab('calendar')}
-                    class="text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-xl transition"
+                    class="text-xs font-bold bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-xl transition"
                   >
                     ← Назад
                   </button>
                 </div>
 
-                {/* ВЫБОР ЦВЕТОВОЙ ТЕМЫ ДЛЯ ТЕКУЩЕЙ РОЛИ */}
-                <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 space-y-2.5">
+                {/* ПЕРЕКЛЮЧАТЕЛЬ ТЕМНОЙ ТЕМЫ */}
+                <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                  <div>
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-200">🌙 Тёмная тема (Dark Mode)</span>
+                    <p class="text-[11px] text-slate-400">Комфортно для глаз в вечернее время</p>
+                  </div>
+                  <button
+                    onClick={toggleDarkMode}
+                    class={`w-12 h-7 rounded-full p-1 transition-colors duration-200 ease-in-out ${
+                      isDarkMode ? 'bg-indigo-600' : 'bg-slate-300'
+                    }`}
+                  >
+                    <div class={`w-5 h-5 rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                      isDarkMode ? 'translate-x-5' : 'translate-x-0'
+                    }`} />
+                  </button>
+                </div>
+
+                {/* ВЫБОР ЦВЕТОВОЙ ТЕМЫ */}
+                <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-2.5">
                   <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-700">🎨 Цвет оформления для роли «{currentUser}»:</span>
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-200">🎨 Цвет оформления для роли «{currentUser}»:</span>
                     <span class="text-[11px] font-semibold text-slate-400">{theme.name}</span>
                   </div>
                   <div class="grid grid-cols-6 gap-2 pt-1">
@@ -1661,7 +1678,7 @@
                         key={key}
                         onClick={() => setAndSaveUserTheme(key)}
                         class={`h-9 rounded-xl ${val.primary} text-white flex items-center justify-center font-bold text-xs shadow-xs transition transform active:scale-90 ${
-                          currentThemeKey === key ? 'ring-2 ring-offset-2 ring-slate-700 scale-105' : 'opacity-80'
+                          currentThemeKey === key ? 'ring-2 ring-offset-2 ring-slate-700 dark:ring-slate-300 scale-105' : 'opacity-80'
                         }`}
                         title={val.name}
                       >
@@ -1672,11 +1689,11 @@
                 </div>
 
                 {/* УПРАВЛЕНИЕ КАТЕГОРИЯМИ КАНБАНА */}
-                <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 space-y-2.5">
-                  <span class="text-xs font-bold text-slate-700">🏷️ Категории недельного расписания</span>
+                <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-2.5">
+                  <span class="text-xs font-bold text-slate-700 dark:text-slate-200">🏷️ Категории недельного расписания</span>
                   <div class="flex flex-wrap gap-1.5 pt-1">
                     {categories.map((cat, i) => (
-                      <span key={i} class="inline-flex items-center gap-1.5 text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-xl font-medium">
+                      <span key={i} class="inline-flex items-center gap-1.5 text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-xl font-medium">
                         {cat}
                         {categories.length > 1 && (
                           <button onClick={() => handleDeleteCategory(cat)} class="text-slate-400 hover:text-rose-500 text-[10px]">✕</button>
@@ -1690,7 +1707,7 @@
                       placeholder="Новая категория..."
                       value={newCustomCategoryInput}
                       onChange={(e) => setNewCustomCategoryInput(e.target.value)}
-                      class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none"
+                      class="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs outline-none text-slate-800 dark:text-slate-100"
                     />
                     <button type="submit" class={`${theme.primary} text-white text-xs font-bold px-3 py-1.5 rounded-xl`}>
                       + Добавить
@@ -1698,10 +1715,10 @@
                   </form>
                 </div>
 
-                {/* ИСТОРИЯ ИЗМЕНЕНИЙ (КТО ЧТО МЕНЯЛ) */}
-                <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 space-y-2.5">
+                {/* ИСТОРИЯ ИЗМЕНЕНИЙ */}
+                <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-2.5">
                   <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-700">🕒 История действий (кто что менял)</span>
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-200">🕒 История действий (кто что менял)</span>
                     <span class="text-[10px] text-slate-400">Последние 40</span>
                   </div>
 
@@ -1712,15 +1729,15 @@
                       activityLogs.map((log) => {
                         const timeStr = log.created_at ? new Date(log.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : '';
                         return (
-                          <div key={log.id} class="flex items-start gap-2 text-xs border-b border-slate-50 pb-1.5">
+                          <div key={log.id} class="flex items-start gap-2 text-xs border-b border-slate-50 dark:border-slate-800/60 pb-1.5">
                             <span class={`text-[9px] font-bold px-1.5 py-0.2 rounded mt-0.5 shrink-0 ${
-                              log.user_name === 'Рома' ? 'bg-sky-100 text-sky-800' :
-                              log.user_name === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 text-slate-700'
+                              log.user_name === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+                              log.user_name === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                             }`}>
                               {log.user_name}
                             </span>
-                            <span class="text-slate-600 flex-1 leading-snug">{log.action_text}</span>
-                            <span class="text-[10px] text-slate-300 font-mono shrink-0">{timeStr}</span>
+                            <span class="text-slate-600 dark:text-slate-300 flex-1 leading-snug">{log.action_text}</span>
+                            <span class="text-[10px] text-slate-300 dark:text-slate-500 font-mono shrink-0">{timeStr}</span>
                           </div>
                         );
                       })
@@ -1729,14 +1746,14 @@
                 </div>
 
                 {/* РЕЗЕРВНАЯ КОПИЯ */}
-                <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center">
+                <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex justify-between items-center">
                   <div>
-                    <h4 class="text-xs font-bold text-slate-700">📦 Резервная копия базы</h4>
+                    <h4 class="text-xs font-bold text-slate-700 dark:text-slate-200">📦 Резервная копия базы</h4>
                     <p class="text-[11px] text-slate-400">Скачать файл со всеми задачами и рецептами</p>
                   </div>
                   <button
                     onClick={exportFamilyDataBackup}
-                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-2 rounded-xl transition active:scale-95"
+                    class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold px-3 py-2 rounded-xl transition active:scale-95"
                   >
                     Экспорт JSON
                   </button>
@@ -1745,12 +1762,75 @@
             )}
           </div>
 
+          {/* МОДАЛЬНОЕ ОКНО ПЕРЕНОСА ЗАДАЧИ НА ДАТУ (СВАЙП ВЛЕВО) */}
+          {moveModalTask && (
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+              <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-5 space-y-4 border border-slate-200 dark:border-slate-800 shadow-2xl">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Перенести задачу</h3>
+                    <p class="text-xs text-slate-400 truncate max-w-[240px]">«{moveModalTask.text}»</p>
+                  </div>
+                  <button onClick={() => setMoveModalTask(null)} class="text-slate-400 hover:text-slate-600 text-base p-1">✕</button>
+                </div>
+
+                {/* Быстрые пресеты */}
+                <div class="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => applyMoveToDate(addDaysToIsoDate(moveModalTask.date, 1))}
+                    class="py-2 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold active:scale-95 transition"
+                  >
+                    Завтра
+                  </button>
+                  <button
+                    onClick={() => applyMoveToDate(addDaysToIsoDate(moveModalTask.date, 2))}
+                    class="py-2 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold active:scale-95 transition"
+                  >
+                    Послезавтра
+                  </button>
+                  <button
+                    onClick={() => applyMoveToDate(addDaysToIsoDate(moveModalTask.date, 7))}
+                    class="py-2 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold active:scale-95 transition"
+                  >
+                    +1 неделя
+                  </button>
+                </div>
+
+                {/* Точный выбор даты */}
+                <div class="space-y-1.5 pt-1">
+                  <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Или конкретная дата:</label>
+                  <input
+                    type="date"
+                    value={customDateInput}
+                    onChange={(e) => setCustomDateInput(e.target.value)}
+                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 dark:text-slate-100 outline-none"
+                  />
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                  <button
+                    onClick={() => setMoveModalTask(null)}
+                    class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 py-2.5 rounded-xl text-xs font-bold"
+                  >
+                    Отмена
+                  </button>
+                  <button
+                    onClick={() => applyMoveToDate(customDateInput)}
+                    class={`flex-1 ${theme.primary} text-white py-2.5 rounded-xl text-xs font-bold shadow-md active:scale-95 transition`}
+                  >
+                    Сохранить
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ */}
-          <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 pt-2 pb-safe flex justify-around items-center z-40">
+          <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-3 pt-2 pb-safe flex justify-around items-center z-40 transition-colors">
             <button
               onClick={() => setActiveTab('calendar')}
               class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
-                activeTab === 'calendar' ? `${theme.textAccent} font-bold` : 'text-slate-400'
+                activeTab === 'calendar' ? `${theme.textAccent} font-bold` : 'text-slate-400 dark:text-slate-500'
               }`}
             >
               <span class="text-base">📅</span>
@@ -1759,7 +1839,7 @@
             <button
               onClick={() => setActiveTab('kanban')}
               class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
-                activeTab === 'kanban' ? `${theme.textAccent} font-bold` : 'text-slate-400'
+                activeTab === 'kanban' ? `${theme.textAccent} font-bold` : 'text-slate-400 dark:text-slate-500'
               }`}
             >
               <span class="text-base">📊</span>
@@ -1768,7 +1848,7 @@
             <button
               onClick={() => setActiveTab('backlog')}
               class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
-                activeTab === 'backlog' ? `${theme.textAccent} font-bold` : 'text-slate-400'
+                activeTab === 'backlog' ? `${theme.textAccent} font-bold` : 'text-slate-400 dark:text-slate-500'
               }`}
             >
               <span class="text-base">📝</span>
@@ -1777,7 +1857,7 @@
             <button
               onClick={() => setActiveTab('recipes')}
               class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
-                activeTab === 'recipes' ? `${theme.textAccent} font-bold` : 'text-slate-400'
+                activeTab === 'recipes' ? `${theme.textAccent} font-bold` : 'text-slate-400 dark:text-slate-500'
               }`}
             >
               <span class="text-base">📖</span>
@@ -1786,7 +1866,7 @@
             <button
               onClick={() => setActiveTab('cart')}
               class={`flex flex-col items-center gap-0.5 text-[11px] font-medium transition ${
-                activeTab === 'cart' ? `${theme.textAccent} font-bold` : 'text-slate-400'
+                activeTab === 'cart' ? `${theme.textAccent} font-bold` : 'text-slate-400 dark:text-slate-500'
               }`}
             >
               <span class="text-base">🛒</span>
