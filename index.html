@@ -13,6 +13,11 @@
   <link rel="icon" type="image/png" sizes="32x32" href="./icon.png" />
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -33,7 +38,7 @@
   <script type="text/babel">
     const { useState, useEffect, useMemo, useRef } = React;
 
-   const SUPABASE_URL = "https://radangmwyldbolbuoahx.supabase.co";
+    const SUPABASE_URL = "https://radangmwyldbolbuoahx.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhZGFuZ213eWxkYm9sYnVvYWh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1OTI3MTIsImV4cCI6MjEwOTE2ODcxMn0.qaSZOIopwidX-l1BoJo4xieISo0VQHStCeOyKvlcMQU";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -102,7 +107,7 @@
 
     function triggerHaptic() {
       if (window.navigator && window.navigator.vibrate) {
-        try { window.navigator.vibrate(15); } catch (e) {}
+        try { window.navigator.vibrate(18); } catch (e) {}
       }
     }
 
@@ -125,6 +130,7 @@
 
     function SwipeableTaskItem({ task, onToggle, onDelete, onMoveToTomorrow, onRequestDateModal, theme }) {
       const [dragX, setDragX] = useState(0);
+      const [isExpanded, setIsExpanded] = useState(false);
       const touchStartX = useRef(0);
       const touchStartY = useRef(0);
       const isDragging = useRef(false);
@@ -176,57 +182,63 @@
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             style={{ transform: `translateX(${dragX}px)`, transition: dragX === 0 ? 'transform 0.25s ease-out' : 'none' }}
-            class={`relative flex items-center gap-2.5 p-3 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 transition-colors ${
+            class={`relative flex items-start gap-2.5 p-3 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 transition-colors ${
               task.done ? 'opacity-50 bg-slate-50/80 dark:bg-slate-900/60' : ''
             }`}
           >
             <button
               onClick={() => onToggle(task)}
-              class={`w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all shrink-0 ${
+              class={`w-6 h-6 rounded-lg border-2 flex items-center justify-center font-bold text-xs transition-all shrink-0 mt-0.5 ${
                 task.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600'
               }`}
             >
               {task.done && '✓'}
             </button>
 
-            <div class="flex-1 min-w-0 flex items-center gap-2">
-              {task.time && (
-                <span class={`text-[11px] font-mono font-bold ${theme.textAccent} ${theme.cardBg} px-1.5 py-0.5 rounded-md shrink-0`}>
-                  {task.time}
+            <div class="flex-1 min-w-0" onClick={() => setIsExpanded(!isExpanded)}>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                {task.time && (
+                  <span class={`text-[11px] font-mono font-bold ${theme.textAccent} ${theme.cardBg} px-1.5 py-0.2 rounded-md shrink-0`}>
+                    {task.time}
+                  </span>
+                )}
+                <span class={`text-xs font-medium leading-tight cursor-pointer ${
+                  isExpanded ? 'whitespace-normal break-words' : 'truncate block'
+                } ${task.done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}`}>
+                  {task.text}
                 </span>
-              )}
-              <p class={`text-xs font-medium leading-tight truncate ${task.done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}`}>
-                {task.text}
-              </p>
+              </div>
             </div>
 
-            <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
-              task.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
-              task.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-            }`}>
-              {task.assignee}
-            </span>
+            <div class="flex items-center gap-1 shrink-0 mt-0.5">
+              <span class={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                task.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+                task.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+              }`}>
+                {task.assignee}
+              </span>
 
-            <div class="hidden sm:flex items-center gap-1 shrink-0">
-              <button
-                onClick={() => onMoveToTomorrow(task)}
-                class="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-semibold"
-                title="Перенести на завтра"
-              >
-                +1д
-              </button>
-              <button
-                onClick={() => onRequestDateModal(task)}
-                class="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded"
-                title="Перенести на дату"
-              >
-                📅
+              <div class="hidden sm:flex items-center gap-1">
+                <button
+                  onClick={() => onMoveToTomorrow(task)}
+                  class="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-semibold"
+                  title="На завтра"
+                >
+                  +1д
+                </button>
+                <button
+                  onClick={() => onRequestDateModal(task)}
+                  class="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded"
+                  title="Выбрать дату"
+                >
+                  📅
+                </button>
+              </div>
+
+              <button onClick={() => onDelete(task.id)} class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1">
+                ✕
               </button>
             </div>
-
-            <button onClick={() => onDelete(task.id)} class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1 shrink-0">
-              ✕
-            </button>
           </div>
         </div>
       );
@@ -250,6 +262,8 @@
       const [recipes, setRecipes] = useState([]);
       const [shoppingList, setShoppingList] = useState([]);
       const [activityLogs, setActivityLogs] = useState([]);
+      const [monthlyFocusList, setMonthlyFocusList] = useState([]);
+
       const [categories, setCategories] = useState(() => {
         const saved = localStorage.getItem('fp_custom_categories');
         return saved ? JSON.parse(saved) : ['Спортзал', 'Врач', 'Встреча', 'Работа', 'Отдых', 'Другое'];
@@ -258,16 +272,28 @@
       const [filterAssignee, setFilterAssignee] = useState('Все');
       const [isCalendarDoneOpen, setIsCalendarDoneOpen] = useState(false);
       const [isBacklogDoneOpen, setIsBacklogDoneOpen] = useState(false);
+      const [isShoppingDoneOpen, setIsShoppingDoneOpen] = useState(false);
 
       const [moveModalTask, setMoveModalTask] = useState(null);
       const [customDateInput, setCustomDateInput] = useState('');
 
+      // Фокус месяца
+      const [newFocusText, setNewFocusText] = useState('');
+      const [newFocusAssignee, setNewFocusAssignee] = useState('Общее');
+
+      // Рецепты
       const [recipeCategoryFilter, setRecipeCategoryFilter] = useState('Все');
       const [isQuickLinkOpen, setIsQuickLinkOpen] = useState(false);
       const [quickLinkUrl, setQuickLinkUrl] = useState('');
       const [quickLinkTitle, setQuickLinkTitle] = useState('');
       const [quickLinkCategory, setQuickLinkCategory] = useState('Обед');
 
+      // Покупки по категориям
+      const [shoppingCategoryFilter, setShoppingCategoryFilter] = useState('Все');
+      const [newShopItem, setNewShopItem] = useState('');
+      const [newShopCategory, setNewShopCategory] = useState('Прочее');
+
+      // Формы ввода
       const [newTaskText, setNewTaskText] = useState('');
       const [newTaskTime, setNewTaskTime] = useState('');
       const [newTaskAssignee, setNewTaskAssignee] = useState('Общее');
@@ -280,7 +306,6 @@
       const [kanbanCategory, setKanbanCategory] = useState(categories[0] || 'Спортзал');
       const [kanbanAssignee, setKanbanAssignee] = useState('Общее');
 
-      const [newShopItem, setNewShopItem] = useState('');
       const [newCustomCategoryInput, setNewCustomCategoryInput] = useState('');
 
       const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
@@ -297,10 +322,13 @@
       const theme = THEME_PALETTES[currentThemeKey] || THEME_PALETTES.blue;
 
       useEffect(() => {
+        const root = document.documentElement;
         if (isDarkMode) {
-          document.documentElement.classList.add('dark');
+          root.classList.add('dark');
+          document.body.className = 'bg-slate-950 text-slate-100 antialiased font-sans';
         } else {
-          document.documentElement.classList.remove('dark');
+          root.classList.remove('dark');
+          document.body.className = 'bg-slate-100 text-slate-800 antialiased font-sans';
         }
         localStorage.setItem('fp_dark_mode', isDarkMode);
       }, [isDarkMode]);
@@ -341,13 +369,14 @@
 
       const fetchData = async () => {
         try {
-          const [tRes, bRes, sRes, rRes, shRes, aRes] = await Promise.all([
+          const [tRes, bRes, sRes, rRes, shRes, aRes, fRes] = await Promise.all([
             supabase.from('tasks').select('*').order('created_at', { ascending: false }),
             supabase.from('backlog').select('*').order('created_at', { ascending: false }),
             supabase.from('schedule').select('*').order('time', { ascending: true }),
             supabase.from('recipes').select('*').order('id', { ascending: false }),
             supabase.from('shopping').select('*').order('created_at', { ascending: false }),
-            supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(40)
+            supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(40),
+            supabase.from('monthly_focus').select('*').order('created_at', { ascending: false })
           ]);
 
           if (tRes.data) setTasks(tRes.data);
@@ -356,6 +385,7 @@
           if (rRes.data) setRecipes(rRes.data);
           if (shRes.data) setShoppingList(shRes.data);
           if (aRes.data) setActivityLogs(aRes.data);
+          if (fRes.data) setMonthlyFocusList(fRes.data);
         } catch (err) {
           console.error("Ошибка загрузки:", err);
         }
@@ -370,7 +400,7 @@
         window.addEventListener('offline', handleOffline);
 
         const channel = supabase
-          .channel('schema-db-all-sync-v3')
+          .channel('schema-db-all-sync-v4')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
             supabase.from('tasks').select('*').then(res => res.data && setTasks(res.data));
           })
@@ -388,6 +418,9 @@
           })
           .on('postgres_changes', { event: '*', schema: 'public', table: 'activity_log' }, () => {
             supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(40).then(res => res.data && setActivityLogs(res.data));
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'monthly_focus' }, () => {
+            supabase.from('monthly_focus').select('*').then(res => res.data && setMonthlyFocusList(res.data));
           })
           .subscribe();
 
@@ -421,6 +454,7 @@
       };
 
       const monthName = calendarViewDate.toLocaleString('ru-RU', { month: 'long', year: 'numeric' });
+      const currentMonthKey = `${calendarViewDate.getFullYear()}-${String(calendarViewDate.getMonth() + 1).padStart(2, '0')}`;
 
       const currentWeekDays = useMemo(() => {
         const curr = new Date(selectedDate);
@@ -483,6 +517,7 @@
       const addTask = async (e) => {
         e.preventDefault();
         if (!newTaskText.trim()) return;
+        triggerHaptic();
         const newTask = {
           id: Date.now().toString(),
           text: newTaskText.trim(),
@@ -505,6 +540,45 @@
         await supabase.from('tasks').delete().eq('id', id);
       };
 
+      // ФОКУС МЕСЯЦА
+      const addMonthlyFocus = async (e) => {
+        e.preventDefault();
+        if (!newFocusText.trim()) return;
+        triggerHaptic();
+        const newFocus = {
+          id: Date.now().toString(),
+          month: currentMonthKey,
+          text: newFocusText.trim(),
+          assignee: newFocusAssignee,
+          done: false
+        };
+        setMonthlyFocusList([newFocus, ...monthlyFocusList]);
+        setNewFocusText('');
+        logActivity(`добавил(а) фокус месяца: "${newFocus.text}"`);
+        await supabase.from('monthly_focus').insert([newFocus]);
+      };
+
+      const toggleMonthlyFocus = async (item) => {
+        triggerHaptic();
+        const nextDone = !item.done;
+        setMonthlyFocusList(monthlyFocusList.map(f => f.id === item.id ? { ...f, done: nextDone } : f));
+        logActivity(`${nextDone ? 'выполнил(а)' : 'вернул(а)'} фокус месяца: "${item.text}"`);
+        await supabase.from('monthly_focus').update({ done: nextDone }).eq('id', item.id);
+      };
+
+      const deleteMonthlyFocus = async (id) => {
+        setMonthlyFocusList(monthlyFocusList.filter(f => f.id !== id));
+        await supabase.from('monthly_focus').delete().eq('id', id);
+      };
+
+      const activeMonthlyFocus = useMemo(() => {
+        return monthlyFocusList.filter(f => f.month === currentMonthKey && !f.done);
+      }, [monthlyFocusList, currentMonthKey]);
+
+      const doneMonthlyFocus = useMemo(() => {
+        return monthlyFocusList.filter(f => f.month === currentMonthKey && f.done);
+      }, [monthlyFocusList, currentMonthKey]);
+
       const toggleScheduleEvent = async (ev) => {
         triggerHaptic();
         const nextDone = !ev.done;
@@ -516,6 +590,7 @@
       const addScheduleEvent = async (e) => {
         e.preventDefault();
         if (!kanbanTitle.trim()) return;
+        triggerHaptic();
         const newEv = {
           id: Date.now().toString(),
           title: kanbanTitle.trim(),
@@ -547,6 +622,7 @@
       const addBacklogTask = async (e) => {
         e.preventDefault();
         if (!newBacklogText.trim()) return;
+        triggerHaptic();
         const newTask = {
           id: Date.now().toString(),
           text: newBacklogText.trim(),
@@ -567,7 +643,7 @@
       const handleQuickLinkSubmit = async (e) => {
         e.preventDefault();
         if (!quickLinkUrl.trim()) return;
-
+        triggerHaptic();
         let formattedUrl = quickLinkUrl.trim();
         if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
           formattedUrl = 'https://' + formattedUrl;
@@ -599,7 +675,7 @@
       const handleAddCustomRecipe = async (e) => {
         e.preventDefault();
         if (!recipeForm.title.trim()) return;
-
+        triggerHaptic();
         const ingredientsArr = recipeForm.ingredientsText
           .split('\n')
           .map(i => i.trim())
@@ -635,17 +711,20 @@
 
       const addIngredientsToCart = async (ingredients) => {
         if (!ingredients || !ingredients.length) return;
+        triggerHaptic();
         const newItems = ingredients.map(ing => ({
           id: Math.random().toString(),
           text: ing,
+          category: 'Продукты',
           done: false
         }));
         setShoppingList([...newItems, ...shoppingList]);
-        alert('Ингредиенты добавлены в покупки!');
+        alert('Ингредиенты добавлены в покупки (Продукты)!');
         logActivity(`добавил(а) ингредиенты в список покупок (${ingredients.length} шт.)`);
         await supabase.from('shopping').insert(newItems);
       };
 
+      // ПОКУПКИ
       const toggleShopItem = async (item) => {
         triggerHaptic();
         const nextDone = !item.done;
@@ -657,10 +736,16 @@
       const addShopItem = async (e) => {
         e.preventDefault();
         if (!newShopItem.trim()) return;
-        const newItem = { id: Date.now().toString(), text: newShopItem.trim(), done: false };
+        triggerHaptic();
+        const newItem = {
+          id: Date.now().toString(),
+          text: newShopItem.trim(),
+          category: newShopCategory || 'Прочее',
+          done: false
+        };
         setShoppingList([newItem, ...shoppingList]);
         setNewShopItem('');
-        logActivity(`добавил(а) продукт: "${newItem.text}"`);
+        logActivity(`добавил(а) в [${newItem.category}]: "${newItem.text}"`);
         await supabase.from('shopping').insert([newItem]);
       };
 
@@ -674,22 +759,24 @@
         const completedIds = shoppingList.filter(i => i.done).map(i => i.id);
         if (!completedIds.length) return;
         setShoppingList(shoppingList.filter(i => !i.done));
-        logActivity(`очистил(а) купленные продукты (${completedIds.length} шт.)`);
+        logActivity(`очистил(а) купленные товары (${completedIds.length} шт.)`);
         for (const id of completedIds) {
           await supabase.from('shopping').delete().eq('id', id);
         }
       };
 
       const addStandardGroceryKit = async () => {
+        triggerHaptic();
         const defaultKit = ['Молоко', 'Яйца (десяток)', 'Хлеб', 'Сливочное масло', 'Сыр твердый'];
         const newItems = defaultKit.map(name => ({
           id: Math.random().toString(),
           text: name,
+          category: 'Продукты',
           done: false
         }));
         setShoppingList([...newItems, ...shoppingList]);
-        alert('Базовый набор продуктов добавлен в покупки!');
-        logActivity('добавил(а) стандартный набор продуктов на неделю');
+        alert('Базовый набор продуктов добавлен!');
+        logActivity('добавил(а) стандартный набор продуктов');
         await supabase.from('shopping').insert(newItems);
       };
 
@@ -710,7 +797,7 @@
       };
 
       const exportFamilyDataBackup = () => {
-        const data = { tasks, backlogTasks, scheduleEvents, recipes, shoppingList, exportDate: new Date().toISOString() };
+        const data = { tasks, backlogTasks, scheduleEvents, recipes, shoppingList, monthlyFocusList, exportDate: new Date().toISOString() };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -746,6 +833,19 @@
           doneBacklogTasks: filtered.filter(t => t.done)
         };
       }, [backlogTasks, filterAssignee]);
+
+      // Фильтрация покупок по активным/купленным и выбранной вкладке
+      const { activeShoppingItems, doneShoppingItems } = useMemo(() => {
+        const filtered = shoppingList.filter(item => {
+          const itemCat = item.category || 'Прочее';
+          return shoppingCategoryFilter === 'Все' || itemCat === shoppingCategoryFilter;
+        });
+
+        return {
+          activeShoppingItems: filtered.filter(i => !i.done),
+          doneShoppingItems: filtered.filter(i => i.done)
+        };
+      }, [shoppingList, shoppingCategoryFilter]);
 
       const currentSchedule = useMemo(() => {
         return scheduleEvents.filter(s => {
@@ -804,9 +904,10 @@
               </div>
             </header>
 
-            {/* ВКЛАДКА 1: КАЛЕНДАРЬ */}
+       {/* ВКЛАДКА 1: КАЛЕНДАРЬ */}
             {activeTab === 'calendar' && (
               <main class="p-4 space-y-3.5">
+                {/* 1. Календарная сетка */}
                 <div class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 shadow-sm border border-slate-100 dark:border-slate-800">
                   <div class="flex justify-between items-center mb-3">
                     <h2 class="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider capitalize">
@@ -866,6 +967,98 @@
                   </div>
                 </div>
 
+                {/* 2. ФОКУС МЕСЯЦА (ПРЯМО ПОД КАЛЕНДАРЕМ) */}
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 shadow-sm border border-slate-200 dark:border-slate-800 space-y-3">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <h3 class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                        <span>🎯</span> Фокус месяца ({monthName})
+                      </h3>
+                      <p class="text-[10px] text-slate-400">Главные цели, которые точно нужно закрыть в этом месяце</p>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                      {activeMonthlyFocus.length}
+                    </span>
+                  </div>
+
+                  <form onSubmit={addMonthlyFocus} class="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Главная цель месяца..."
+                      value={newFocusText}
+                      onChange={(e) => setNewFocusText(e.target.value)}
+                      class="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-100"
+                    />
+                    <select
+                      value={newFocusAssignee}
+                      onChange={(e) => setNewFocusAssignee(e.target.value)}
+                      class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs rounded-xl px-2 py-1.5 text-slate-700 dark:text-slate-200 outline-none"
+                    >
+                      <option value="Общее">Оба</option>
+                      <option value="Рома">Рома</option>
+                      <option value="Марина">Марина</option>
+                    </select>
+                    <button type="submit" class={`${theme.primary} text-white px-3.5 py-1.5 rounded-xl text-xs font-bold active:scale-95 transition`}>
+                      +
+                    </button>
+                  </form>
+
+                  <div class="space-y-1.5 pt-1">
+                    {activeMonthlyFocus.length === 0 && doneMonthlyFocus.length === 0 ? (
+                      <p class="text-[11px] text-slate-400 dark:text-slate-500 text-center py-2">
+                        Цели на этот месяц ещё не добавлены
+                      </p>
+                    ) : (
+                      activeMonthlyFocus.map((item) => (
+                        <div key={item.id} class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 gap-2">
+                          <div class="flex items-center gap-2 min-w-0">
+                            <button
+                              onClick={() => toggleMonthlyFocus(item)}
+                              class="w-5 h-5 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 flex items-center justify-center text-xs shrink-0"
+                            >
+                            </button>
+                            <span class="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-snug">
+                              {item.text}
+                            </span>
+                          </div>
+                          <div class="flex items-center gap-1.5 shrink-0">
+                            <span class={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                              item.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
+                              item.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                            }`}>
+                              {item.assignee}
+                            </span>
+                            <button onClick={() => deleteMonthlyFocus(item.id)} class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1">✕</button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+
+                    {doneMonthlyFocus.length > 0 && (
+                      <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                        <span class="text-[10px] font-bold text-slate-400">Закрытые цели месяца:</span>
+                        {doneMonthlyFocus.map((item) => (
+                          <div key={item.id} class="flex items-center justify-between p-2 rounded-xl bg-slate-50/50 dark:bg-slate-900/40 opacity-50 gap-2">
+                            <div class="flex items-center gap-2 min-w-0">
+                              <button
+                                onClick={() => toggleMonthlyFocus(item)}
+                                class="w-4 h-4 rounded bg-emerald-500 border border-emerald-500 text-white flex items-center justify-center text-[10px] font-bold shrink-0"
+                              >
+                                ✓
+                              </button>
+                              <span class="text-xs line-through text-slate-400 dark:text-slate-500 truncate">
+                                {item.text}
+                              </span>
+                            </div>
+                            <button onClick={() => deleteMonthlyFocus(item.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1">✕</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 3. Фильтр исполнителя */}
                 <div class="grid grid-cols-4 gap-1 bg-slate-200/80 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-semibold">
                   {['Все', 'Рома', 'Марина', 'Общее'].map((tab) => (
                     <button
@@ -880,6 +1073,7 @@
                   ))}
                 </div>
 
+                {/* 4. Добавление задачи на день */}
                 <form onSubmit={addTask} class="bg-white dark:bg-slate-900 p-2.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-2">
                   <div class="flex gap-2">
                     <input
@@ -917,6 +1111,7 @@
                   </div>
                 </form>
 
+                {/* 5. Таймлайн дня */}
                 {currentSchedule.length > 0 && (
                   <div class="space-y-2">
                     <h3 class={`text-[11px] font-bold ${theme.textAccent} uppercase tracking-wider px-1`}>
@@ -959,12 +1154,13 @@
                   </div>
                 )}
 
+                {/* 6. Задачи на день */}
                 <div class="space-y-2">
                   <div class="flex justify-between items-center px-1">
                     <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                      Задачи ({activeCalendarTasks.length})
+                      Задачи на день ({activeCalendarTasks.length})
                     </h2>
-                    <span class="text-[10px] text-slate-400">Свайп: ➔ Завтра | 📅 Дата ⬅</span>
+                    <span class="text-[10px] text-slate-400">Тап: развернуть | Свайп: дата</span>
                   </div>
 
                   {activeCalendarTasks.length === 0 && currentSchedule.length === 0 && doneCalendarTasks.length === 0 ? (
@@ -1018,7 +1214,6 @@
                 </div>
               </main>
             )}
-
             {/* ВКЛАДКА 2: КАНБАН */}
             {activeTab === 'kanban' && (
               <main class="p-4 space-y-4">
@@ -1169,7 +1364,7 @@
                                     {t.done && '✓'}
                                   </button>
                                   {t.time && (
-                                    <span class={`text-[9px] font-mono font-bold ${theme.textAccent} bg-white dark:bg-slate-800 px-1 rounded shrink-0`}>
+                                    <span class={`text-[9px] font-mono font-bold ${theme.textAccent} bg-white px-1 rounded shrink-0`}>
                                       {t.time}
                                     </span>
                                   )}
@@ -1178,8 +1373,8 @@
                                   </span>
                                 </div>
                                 <span class={`text-[8px] font-bold px-1 rounded shrink-0 ${
-                                  t.assignee === 'Рома' ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300' :
-                                  t.assignee === 'Марина' ? 'bg-pink-100 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                                  t.assignee === 'Рома' ? 'bg-sky-100 text-sky-800' :
+                                  t.assignee === 'Марина' ? 'bg-pink-100 text-pink-700' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                                 }`}>
                                   {t.assignee}
                                 </span>
@@ -1267,7 +1462,7 @@
                         </button>
 
                         <div class="flex-1 min-w-0">
-                          <p class="text-xs font-medium leading-tight truncate text-slate-800 dark:text-slate-100">
+                          <p class="text-xs font-medium leading-tight text-slate-800 dark:text-slate-100">
                             {task.text}
                           </p>
                         </div>
@@ -1326,7 +1521,7 @@
                                 {task.assignee}
                               </span>
 
-                              <button onClick={() => deleteBacklogTask(task.id)} class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs p-1">
+                              <button onClick={() => deleteBacklogTask(task.id)} class="text-slate-300 hover:text-rose-500 text-xs p-1">
                                 ✕
                               </button>
                             </div>
@@ -1565,21 +1760,21 @@
               </main>
             )}
 
-            {/* ВКЛАДКА 5: ПОКУПКИ */}
+            {/* ВКЛАДКА 5: ПОКУПКИ (С КАТЕГОРИЯМИ И СПИСКОМ "КУПЛЕНО") */}
             {activeTab === 'cart' && (
               <main class="p-4 space-y-3.5">
                 <div class="flex justify-between items-center px-1">
                   <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    Список покупок ({shoppingList.filter(i => !i.done).length} осталось)
+                    Список покупок ({activeShoppingItems.length} осталось)
                   </h2>
                   <div class="flex gap-2">
                     <button
                       onClick={addStandardGroceryKit}
                       class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 px-2.5 py-1 rounded-xl transition"
                     >
-                      + Стандартный набор
+                      + Набор продуктов
                     </button>
-                    {shoppingList.some(i => i.done) && (
+                    {doneShoppingItems.length > 0 && (
                       <button
                         onClick={clearCompletedShopping}
                         class="text-[11px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 px-2 py-1 rounded-xl transition"
@@ -1590,44 +1785,120 @@
                   </div>
                 </div>
 
-                <form onSubmit={addShopItem} class="bg-white dark:bg-slate-900 p-2 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex gap-2">
+                {/* ГРАФЫ КАТЕГОРИЙ ПОКУПОК */}
+                <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                  {['Все', 'Продукты', 'Аптека', 'Одежда', 'Прочее'].map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setShoppingCategoryFilter(cat)}
+                      class={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                        shoppingCategoryFilter === cat 
+                          ? `${theme.activeBtn} shadow-xs` 
+                          : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+
+                {/* ФОРМА ДОБАВЛЕНИЯ ТОВАРА */}
+                <form onSubmit={addShopItem} class="bg-white dark:bg-slate-900 p-2.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex gap-2">
                   <input
                     type="text"
-                    placeholder="Что купить в магазине..."
+                    placeholder="Что купить..."
                     value={newShopItem}
                     onChange={(e) => setNewShopItem(e.target.value)}
                     class="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none focus:border-indigo-500 text-slate-800 dark:text-slate-100 placeholder-slate-400"
                   />
+                  <select
+                    value={newShopCategory}
+                    onChange={(e) => setNewShopCategory(e.target.value)}
+                    class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs rounded-xl px-2 py-2 text-slate-700 dark:text-slate-200 outline-none"
+                  >
+                    <option value="Продукты">Продукты</option>
+                    <option value="Аптека">Аптека</option>
+                    <option value="Одежда">Одежда</option>
+                    <option value="Прочее">Прочее</option>
+                  </select>
                   <button type="submit" class={`${theme.primary} text-white px-3.5 py-2 rounded-xl text-sm font-bold active:scale-95 transition`}>
                     +
                   </button>
                 </form>
 
+                {/* СПИСОК АКТИВНЫХ ПОКУПОК */}
                 <div class="space-y-1.5">
-                  {shoppingList.map(item => (
-                    <div
-                      key={item.id}
-                      onClick={() => toggleShopItem(item)}
-                      class={`flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer transition ${
-                        item.done ? 'opacity-40 line-through bg-slate-50 dark:bg-slate-900/40' : ''
-                      }`}
-                    >
-                      <div class="flex items-center gap-2.5 min-w-0">
-                        <div class={`w-5 h-5 rounded-md border flex items-center justify-center text-xs font-bold ${
-                          item.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600'
-                        }`}>
-                          {item.done && '✓'}
-                        </div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-200 truncate">{item.text}</span>
-                      </div>
-                      <button 
-                        onClick={(e) => deleteShopItem(item.id, e)} 
-                        class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs px-2 py-1"
-                      >
-                        ✕
-                      </button>
+                  {activeShoppingItems.length === 0 && doneShoppingItems.length === 0 ? (
+                    <div class="text-center py-8 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 text-xs">
+                      В этой категории всё куплено ✨
                     </div>
-                  ))}
+                  ) : (
+                    activeShoppingItems.map(item => (
+                      <div
+                        key={item.id}
+                        onClick={() => toggleShopItem(item)}
+                        class="flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer transition hover:border-slate-300"
+                      >
+                        <div class="flex items-center gap-2.5 min-w-0">
+                          <div class="w-5 h-5 rounded-md border border-slate-300 dark:border-slate-600 flex items-center justify-center text-xs font-bold">
+                          </div>
+                          <span class="text-xs font-medium text-slate-700 dark:text-slate-200 leading-snug">{item.text}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                          <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">
+                            {item.category || 'Прочее'}
+                          </span>
+                          <button 
+                            onClick={(e) => deleteShopItem(item.id, e)} 
+                            class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs px-1 py-1"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+
+                  {/* ВЫПАДАЮЩИЙ СПИСОК "КУПЛЕНО" */}
+                  {doneShoppingItems.length > 0 && (
+                    <div class="pt-3 border-t border-slate-200/60 dark:border-slate-800">
+                      <button
+                        onClick={() => setIsShoppingDoneOpen(!isShoppingDoneOpen)}
+                        class="w-full flex items-center justify-between py-2 px-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-700 transition"
+                      >
+                        <span class="flex items-center gap-1.5">
+                          <span>✓</span>
+                          <span>Куплено ({doneShoppingItems.length})</span>
+                        </span>
+                        <span class="text-[10px] transform transition-transform duration-200">{isShoppingDoneOpen ? '▲' : '▼'}</span>
+                      </button>
+
+                      {isShoppingDoneOpen && (
+                        <div class="space-y-1.5 pt-1">
+                          {doneShoppingItems.map(item => (
+                            <div
+                              key={item.id}
+                              onClick={() => toggleShopItem(item)}
+                              class="flex items-center justify-between p-2.5 bg-white/70 dark:bg-slate-900/60 rounded-xl shadow-xs border border-slate-100 dark:border-slate-800 cursor-pointer transition opacity-50"
+                            >
+                              <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-4 h-4 rounded-md bg-emerald-500 border border-emerald-500 flex items-center justify-center text-[10px] font-bold text-white">
+                                  ✓
+                                </div>
+                                <span class="text-xs font-medium text-slate-400 dark:text-slate-500 line-through truncate">{item.text}</span>
+                              </div>
+                              <button 
+                                onClick={(e) => deleteShopItem(item.id, e)} 
+                                class="text-slate-300 dark:text-slate-600 hover:text-rose-500 text-xs px-2 py-1"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </main>
             )}
@@ -1762,9 +2033,9 @@
             )}
           </div>
 
-          {/* МОДАЛЬНОЕ ОКНО ПЕРЕНОСА ЗАДАЧИ НА ДАТУ (СВАЙП ВЛЕВО) */}
+          {/* МОДАЛЬНОЕ ОКНО ПЕРЕНОСА НА ДАТУ */}
           {moveModalTask && (
-            <div class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
               <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-5 space-y-4 border border-slate-200 dark:border-slate-800 shadow-2xl">
                 <div class="flex justify-between items-center">
                   <div>
@@ -1774,7 +2045,6 @@
                   <button onClick={() => setMoveModalTask(null)} class="text-slate-400 hover:text-slate-600 text-base p-1">✕</button>
                 </div>
 
-                {/* Быстрые пресеты */}
                 <div class="grid grid-cols-3 gap-2">
                   <button
                     onClick={() => applyMoveToDate(addDaysToIsoDate(moveModalTask.date, 1))}
@@ -1796,7 +2066,6 @@
                   </button>
                 </div>
 
-                {/* Точный выбор даты */}
                 <div class="space-y-1.5 pt-1">
                   <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Или конкретная дата:</label>
                   <input
